@@ -33,7 +33,6 @@ public class ViewController implements Animation.AnimationListener {
     }
 
     void init(Activity activity) {
-
         initView(activity);
         initAnim(activity);
     }
