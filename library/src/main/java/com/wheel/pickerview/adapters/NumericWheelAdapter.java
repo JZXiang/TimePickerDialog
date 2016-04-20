@@ -17,6 +17,7 @@
 package com.wheel.pickerview.adapters;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 /**
  * Numeric Wheel adapter.
@@ -39,6 +40,8 @@ public class NumericWheelAdapter extends AbstractWheelTextAdapter {
 
     // format
     private String format;
+    //unit
+    private String unit;
 
     /**
      * Constructor
@@ -69,18 +72,34 @@ public class NumericWheelAdapter extends AbstractWheelTextAdapter {
      * @param format   the format string
      */
     public NumericWheelAdapter(Context context, int minValue, int maxValue, String format) {
-        super(context);
+        this(context, minValue, maxValue, format, null);
+    }
 
+    /**
+     * Constructor
+     *
+     * @param context  the current context
+     * @param minValue the wheel min value
+     * @param maxValue the wheel max value
+     * @param format   the format string
+     * @param unit     the wheel unit value
+     */
+    public NumericWheelAdapter(Context context, int minValue, int maxValue, String format, String unit) {
+        super(context);
         this.minValue = minValue;
         this.maxValue = maxValue;
         this.format = format;
+        this.unit = unit;
     }
 
     @Override
     public CharSequence getItemText(int index) {
         if (index >= 0 && index < getItemsCount()) {
             int value = minValue + index;
-            return format != null ? String.format(format, value) : Integer.toString(value);
+            String text = TextUtils.isEmpty(format) ? String.format(format, value) : Integer.toString(value);
+            text = TextUtils.isEmpty(unit) ? text : text + unit;
+
+            return text;
         }
         return null;
     }
