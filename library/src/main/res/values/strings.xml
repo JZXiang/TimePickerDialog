@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Library</string>
+    <string name="picker_sure">确定</string>
+    <string name="picker_cancel">取消</string>
+    <string name="picker_title">选择时间</string>
+
 </resources>

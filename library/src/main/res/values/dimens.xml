@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="picker_default_text_size">14sp</dimen>
+    <dimen name="picker_toolbar_height">40dp</dimen>
+    <dimen name="picker_dialog_height">190dp</dimen>
+</resources>

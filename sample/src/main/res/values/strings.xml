@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Sample</string>
+
+    <string name="all">ALL</string>
+    <string name="year_month_day">YEAR-MONTH-DAY</string>
+    <string name="year_month">YEAR-MONTH</string>
+    <string name="month_day_hour_minute">MONTH-DAY-HOUR-MINUTE</string>
+    <string name="hour_minute">HOUR-MINUTE</string>
+
 </resources>

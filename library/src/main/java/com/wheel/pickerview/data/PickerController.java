@@ -1,5 +1,6 @@
 package com.wheel.pickerview.data;
 
+
 /**
  * Created by jzxiang on 16/4/20.
  */
@@ -25,5 +26,13 @@ public interface PickerController {
 
     int getMaxMinute();
 
+    boolean isMinYear(int year);
+
+    boolean isMinMonth(int year, int month);
+
+    boolean isMinDay(int year, int month, int day);
+
     boolean isNoRange();
+
+    WheelCalendar getDefaultCalendar();
 }

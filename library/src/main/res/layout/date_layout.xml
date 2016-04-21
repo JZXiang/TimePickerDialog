@@ -1,41 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_gravity="center_horizontal"
-              android:paddingLeft="12dp"
-              android:paddingRight="12dp"
-              android:paddingTop="30dp">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom"
+    android:orientation="vertical"
+    >
 
-    <com.wheel.pickerview.wheel.WheelView
-        android:id="@+id/year"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1.3"/>
+    <include
+        layout="@layout/toolbar"/>
 
-    <com.wheel.pickerview.wheel.WheelView
-        android:id="@+id/month"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1.0"/>
+    <LinearLayout
+        android:id="@+id/linear_wheel"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/picker_dialog_height"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center_horizontal"
+        >
 
-    <com.wheel.pickerview.wheel.WheelView
-        android:id="@+id/day"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1.0"/>
+        <com.wheel.pickerview.wheel.WheelView
+            android:id="@+id/year"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.3"/>
 
-    <com.wheel.pickerview.wheel.WheelView
-        android:id="@+id/hour"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1.0"/>
+        <com.wheel.pickerview.wheel.WheelView
+            android:id="@+id/month"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.0"/>
 
-    <com.wheel.pickerview.wheel.WheelView
-        android:id="@+id/minute"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1.0"/>
+        <com.wheel.pickerview.wheel.WheelView
+            android:id="@+id/day"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.0"/>
+
+        <com.wheel.pickerview.wheel.WheelView
+            android:id="@+id/hour"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.0"/>
+
+        <com.wheel.pickerview.wheel.WheelView
+            android:id="@+id/minute"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.0"/>
+    </LinearLayout>
 
 
 </LinearLayout>
+
+

@@ -1,7 +1,6 @@
 package com.wheel.pickerview.utils;
 
 import android.app.Activity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -17,20 +16,13 @@ public class ViewController implements Animation.AnimationListener {
 
     View mViewShader;
     ViewGroup mContentView;
-    View mRootLayout;
-    Animation mAnimBgIn, mAnimBgOut, mAnimViewIn, mAnimViewOut;
+    Animation mAnimBgIn, mAnimBgOut;
 
 
-    public ViewController(Activity activity, View rootLayout) {
-        mRootLayout = rootLayout;
+    public ViewController(Activity activity) {
         init(activity);
     }
 
-    public ViewController(Activity activity, int rootLayoutId) {
-        LayoutInflater inflater = LayoutInflater.from(activity);
-        mRootLayout = inflater.inflate(rootLayoutId, mContentView, false);
-        init(activity);
-    }
 
     void init(Activity activity) {
         initView(activity);
@@ -40,11 +32,16 @@ public class ViewController implements Animation.AnimationListener {
     void initView(Activity activity) {
         mContentView = (ViewGroup) activity.getWindow().getDecorView().findViewById(android.R.id.content);
         mViewShader = new View(activity);
-
+        mViewShader.setBackgroundResource(R.color.picker_dialog_bg);
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
         mViewShader.setLayoutParams(params);
+
+    }
+
+    public void setShaderClickListener(View.OnClickListener onClickListener) {
+        mViewShader.setOnClickListener(onClickListener);
     }
 
     void initAnim(Activity activity) {
@@ -52,18 +49,13 @@ public class ViewController implements Animation.AnimationListener {
         mAnimBgOut = AnimationUtils.loadAnimation(activity, android.R.anim.fade_out);
         mAnimBgOut.setFillAfter(true);
         mAnimBgOut.setAnimationListener(this);
-
-        mAnimViewIn = AnimationUtils.loadAnimation(activity, R.anim.slide_in_bottom);
-        mAnimViewOut = AnimationUtils.loadAnimation(activity, R.anim.slide_out_bottom);
     }
 
 
     public void show() {
         mContentView.addView(mViewShader);
-        mContentView.addView(mRootLayout);
         mViewShader.startAnimation(mAnimBgIn);
     }
-
 
     public void dismiss() {
         mViewShader.startAnimation(mAnimBgOut);

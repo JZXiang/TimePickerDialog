@@ -30,7 +30,7 @@ public class WheelCalendar {
         minute = calendar.get(Calendar.MINUTE);
     }
 
-    boolean isNoRange() {
+    public boolean isNoRange() {
         return noRange;
     }
 
