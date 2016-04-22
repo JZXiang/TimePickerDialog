@@ -26,7 +26,6 @@ public class TimeWheel {
     private NumericWheelAdapter mYearAdapter, mMonthAdapter, mDayAdapter, mHourAdapter, mMinuteAdapter;
 
     private int mTextSize;
-    private int mTextColor;
 
     private PickerController mPickerController;
     OnWheelChangedListener yearListener = new OnWheelChangedListener() {
@@ -59,8 +58,7 @@ public class TimeWheel {
         mContext = view.getContext();
 
 //        mTextSize = mContext.getResources().getDimensionPixelSize(R.dimen.picker_default_text_size);
-        mTextSize = 10;
-        mTextColor = mContext.getResources().getColor(R.color.picker_default_text_color);
+        mTextSize = 18;
 
         initialize();
     }
@@ -70,10 +68,6 @@ public class TimeWheel {
         initialize();
     }
 
-    public void setTextColor(int textColor) {
-        mTextColor = textColor;
-        initialize();
-    }
 
     public void initialize() {
         initView();
@@ -109,17 +103,19 @@ public class TimeWheel {
                 break;
         }
 
-        month.addChangingListener(monthListener);
-        day.addChangingListener(dayListener);
         year.addChangingListener(yearListener);
+        year.addChangingListener(monthListener);
+        year.addChangingListener(dayListener);
+        month.addChangingListener(monthListener);
+        month.addChangingListener(dayListener);
+        day.addChangingListener(dayListener);
+
     }
 
     void initYear() {
         int minYear = mPickerController.getMinYear();
         int maxYear = mPickerController.getMaxYear();
         mYearAdapter = new NumericWheelAdapter(mContext, minYear, maxYear, PickerContants.FORMAT, PickerContants.YEAR);
-        mYearAdapter.setTextColor(mTextColor);
-        mYearAdapter.setTextSize(mTextSize);
         mYearAdapter.setTextSize(mTextSize);
         year.setViewAdapter(mYearAdapter);
         year.setCurrentItem(mPickerController.getDefaultCalendar().year - minYear);
@@ -156,7 +152,6 @@ public class TimeWheel {
         int maxMinute = mPickerController.getMaxMinute();
         mMinuteAdapter = new NumericWheelAdapter(mContext, minMinute, maxMinute, PickerContants.FORMAT, PickerContants.MINUTE);
         mMinuteAdapter.setTextSize(mTextSize);
-        mMinuteAdapter.setTextColor(mTextColor);
         minute.setViewAdapter(mMinuteAdapter);
     }
 
@@ -169,11 +164,10 @@ public class TimeWheel {
         int maxMonth = mPickerController.getMaxMonth();
         mMonthAdapter = new NumericWheelAdapter(mContext, minMonth, maxMonth, PickerContants.FORMAT, PickerContants.MONTH);
         mMonthAdapter.setTextSize(mTextSize);
-        mMonthAdapter.setTextColor(mTextColor);
         month.setViewAdapter(mMonthAdapter);
 
         if (mPickerController.isMinYear(curYear)) {
-            month.setCurrentItem(0, true);
+            month.setCurrentItem(0, false);
         }
     }
 
@@ -191,12 +185,16 @@ public class TimeWheel {
         int maxDay = mPickerController.getMaxDay(curYear, curMonth);
         int minDay = mPickerController.getMinDay(curYear, curMonth);
         mDayAdapter = new NumericWheelAdapter(mContext, minDay, maxDay, PickerContants.FORMAT, PickerContants.DAY);
-        mDayAdapter.setTextColor(mTextColor);
         mDayAdapter.setTextSize(mTextSize);
         day.setViewAdapter(mDayAdapter);
 
         if (mPickerController.isMinMonth(curYear, curMonth)) {
             day.setCurrentItem(0, true);
+        }
+
+        int dayCount = mDayAdapter.getItemsCount();
+        if (day.getCurrentItem() >= dayCount) {
+            day.setCurrentItem(dayCount - 1, true);
         }
     }
 
@@ -213,11 +211,10 @@ public class TimeWheel {
 
         mHourAdapter = new NumericWheelAdapter(mContext, minHour, maxHour, PickerContants.FORMAT, PickerContants.HOUR);
         mHourAdapter.setTextSize(mTextSize);
-        mHourAdapter.setTextColor(mTextColor);
         hour.setViewAdapter(mHourAdapter);
 
         if (mPickerController.isMinDay(curYear, curMonth, curDay))
-            hour.setCurrentItem(0, true);
+            hour.setCurrentItem(0, false);
     }
 
     public int getCurrentYear() {

@@ -52,8 +52,6 @@ public class WheelView extends View {
     private static final int[] SHADOWS_COLORS = new int[]{0xFF111111,
             0x00AAAAAA, 0x00AAAAAA};
 
-//	private static final int[] SHADOWS_COLORS = new int[] { 0xFF111111,
-//			0x00AAAAAA, 0x00AAAAAA };
 
     /**
      * Top and bottom items offset (to hide that)
@@ -236,7 +234,6 @@ public class WheelView extends View {
         if (this.viewAdapter != null) {
             this.viewAdapter.registerDataSetObserver(dataObserver);
         }
-
         invalidateWheel(true);
     }
 
@@ -373,6 +370,8 @@ public class WheelView extends View {
                 return; // throw?
             }
         }
+
+
         if (index != currentItem) {
             if (animated) {
                 int itemsToScroll = index - currentItem;
@@ -393,6 +392,8 @@ public class WheelView extends View {
 
                 invalidate();
             }
+
+
         }
     }
 
@@ -452,6 +453,7 @@ public class WheelView extends View {
         }
 
         setBackgroundResource(R.drawable.wheel_bg);
+//        setBackgroundResource(android.R.color.white);
     }
 
     /**
@@ -568,7 +570,6 @@ public class WheelView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
         if (viewAdapter != null && viewAdapter.getItemsCount() > 0) {
             updateView();
 
@@ -718,8 +719,8 @@ public class WheelView extends View {
     /**
      * Scroll the wheel
      *
-     * @param itemsToSkip items to scroll
-     * @param time        scrolling duration
+     * @param itemsToScroll items to scroll
+     * @param time          scrolling duration
      */
     public void scroll(int itemsToScroll, int time) {
         int distance = itemsToScroll * getItemHeight() - scrollingOffset;
@@ -894,6 +895,7 @@ public class WheelView extends View {
         }
 
         index %= count;
+
         return viewAdapter.getItem(index, recycle.getItem(), itemsLayout);
     }
 

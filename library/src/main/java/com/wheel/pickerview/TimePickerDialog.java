@@ -1,14 +1,11 @@
 package com.wheel.pickerview;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +15,7 @@ import android.widget.TextView;
 import com.wheel.pickerview.data.PickerController;
 import com.wheel.pickerview.data.Type;
 import com.wheel.pickerview.data.WheelCalendar;
-import com.wheel.pickerview.listener.DateSetListener;
+import com.wheel.pickerview.listener.OnDateSetListener;
 import com.wheel.pickerview.utils.PickerContants;
 import com.wheel.pickerview.utils.Utils;
 import com.wheel.pickerview.utils.ViewController;
@@ -30,7 +27,7 @@ import java.util.Calendar;
  * Created by jzxiang on 16/4/19.
  */
 public class TimePickerDialog extends DialogFragment implements PickerController, View.OnClickListener {
-    private DateSetListener mCallBack;
+    private OnDateSetListener mCallBack;
     private TimeWheel mTimeWheel;
     private TextView mTvCancel, mTvTitle, mTvSure;
     private String mTitle;
@@ -38,23 +35,23 @@ public class TimePickerDialog extends DialogFragment implements PickerController
     private ViewController mViewController;
 
     private WheelCalendar mCalendarMin, mCalendarCurrent;
+    private Type mType;
 
-    public static TimePickerDialog newIntance(DateSetListener dateSetListener) {
-        return newIntance(dateSetListener, Calendar.getInstance(), 0, PickerContants.DEFAULT_TYPE);
+    public static TimePickerDialog newIntance(OnDateSetListener onDateSetListener) {
+        return newIntance(onDateSetListener, Calendar.getInstance(), 0, PickerContants.DEFAULT_TYPE);
     }
 
-    public static TimePickerDialog newIntance(DateSetListener dateSetListener, Type type) {
-        return newIntance(dateSetListener, Calendar.getInstance(), 0, type);
+    public static TimePickerDialog newIntance(OnDateSetListener onDateSetListener, Type type) {
+        return newIntance(onDateSetListener, Calendar.getInstance(), 0, type);
     }
 
-    public static TimePickerDialog newIntance(DateSetListener dateSetListener, Calendar cllendar, Type type) {
-        return newIntance(dateSetListener, cllendar, 0, type);
+    public static TimePickerDialog newIntance(OnDateSetListener onDateSetListener, Calendar cllendar, Type type) {
+        return newIntance(onDateSetListener, cllendar, 0, type);
     }
 
-    public static TimePickerDialog newIntance(DateSetListener dateSetListener, Calendar calendar, long minMillSeconds, Type type) {
+    public static TimePickerDialog newIntance(OnDateSetListener onDateSetListener, Calendar calendar, long minMillSeconds, Type type) {
         TimePickerDialog timePickerDialog = new TimePickerDialog();
-        timePickerDialog.initialize(dateSetListener, calendar, minMillSeconds);
-
+        timePickerDialog.initialize(onDateSetListener, calendar, minMillSeconds, type);
         return timePickerDialog;
     }
 
@@ -80,23 +77,14 @@ public class TimePickerDialog extends DialogFragment implements PickerController
             mTvTitle.setText(mTitle);
         }
 
-        mTimeWheel = new TimeWheel(this, view);
+        mTimeWheel = new TimeWheel(this, view, mType);
         return view;
     }
 
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Dialog dialog = super.onCreateDialog(savedInstanceState);
-        dialog.getWindow().setGravity(Gravity.BOTTOM);
-        dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
-        dialog.getWindow().setBackgroundDrawableResource(R.color.picker_dialog_bg);
-        dialog.setCanceledOnTouchOutside(true);
-        return null;
-    }
 
-    private void initialize(DateSetListener dateSetListener, Calendar defaultCalendar, long minMillseconds) {
-        mCallBack = dateSetListener;
+    private void initialize(OnDateSetListener onDateSetListener, Calendar defaultCalendar, long minMillseconds, Type type) {
+        mType = type;
+        mCallBack = onDateSetListener;
         mCalendarMin = new WheelCalendar(minMillseconds);
         mCalendarCurrent = new WheelCalendar(defaultCalendar.getTimeInMillis());
     }
@@ -139,7 +127,7 @@ public class TimePickerDialog extends DialogFragment implements PickerController
     public int getMaxDay(int year, int month) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.MONTH, month - 1);
 
         return calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
     }

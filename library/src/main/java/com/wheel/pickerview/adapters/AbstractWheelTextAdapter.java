@@ -16,13 +16,14 @@
 package com.wheel.pickerview.adapters;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.wheel.pickerview.R;
 
 /**
  * Abstract wheel adapter provides common functionality for adapters.
@@ -34,9 +35,13 @@ public abstract class AbstractWheelTextAdapter extends AbstractWheelAdapter {
      */
     public static final int TEXT_VIEW_ITEM_RESOURCE = -1;
     /**
-     * Default text color
+     * Default the normal text color
      */
-    public static final int DEFAULT_TEXT_COLOR = 0xFF101010;
+    public static final int DEFAULT_NORMAL_TEXT_COLOR = 0xFFa6a6a6;
+    /**
+     * Default the selection text color
+     */
+    public static final int DEFAULT_SEL_TEXT_COLOR = 0xFF333333;
     /**
      * Default text color
      */
@@ -58,9 +63,14 @@ public abstract class AbstractWheelTextAdapter extends AbstractWheelAdapter {
     protected int itemTextResourceId;
     // Empty items resources
     protected int emptyItemResourceId;
+    //selector item
+    protected int currentItem;
     // Text settings
-    private int textColor = DEFAULT_TEXT_COLOR;
+    private int mNormalColor = DEFAULT_NORMAL_TEXT_COLOR;
+    private int mSelectionColor = DEFAULT_SEL_TEXT_COLOR;
     private int textSize = DEFAULT_TEXT_SIZE;
+
+    private int padding = 0;
 
     /**
      * Constructor
@@ -92,26 +102,36 @@ public abstract class AbstractWheelTextAdapter extends AbstractWheelAdapter {
         this.context = context;
         itemResourceId = itemResource;
         itemTextResourceId = itemTextResource;
+        padding = context.getResources().getDimensionPixelSize(R.dimen.textview_default_padding);
 
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    /**
-     * Gets text color
-     *
-     * @return the text color
-     */
-    public int getTextColor() {
-        return textColor;
+
+    public int getNormalColor() {
+        return mNormalColor;
     }
 
     /**
-     * Sets text color
+     * Sets normal text color
      *
-     * @param textColor the text color to set
+     * @param normalColor the normal text color to set
      */
-    public void setTextColor(int textColor) {
-        this.textColor = textColor;
+    public void setNormalColor(int normalColor) {
+        mNormalColor = normalColor;
+    }
+
+    public int getSelectionColor() {
+        return mSelectionColor;
+    }
+
+    /**
+     * Sets selection text color
+     *
+     * @param selectionColor the selection text color to set
+     */
+    public void setSelectionColor(int selectionColor) {
+        mSelectionColor = selectionColor;
     }
 
     /**
@@ -210,7 +230,7 @@ public abstract class AbstractWheelTextAdapter extends AbstractWheelAdapter {
                 textView.setText(text);
 
                 if (itemResourceId == TEXT_VIEW_ITEM_RESOURCE) {
-                    configureTextView(textView);
+                    configureTextView(textView, index);
                 }
             }
             return convertView;
@@ -230,17 +250,29 @@ public abstract class AbstractWheelTextAdapter extends AbstractWheelAdapter {
         return convertView;
     }
 
+
+    /**
+     * Configures text view. Is called for the TEXT_VIEW_ITEM_RESOURCE views.
+     *
+     * @param view the text view to be configured
+     */
+    protected void configureTextView(TextView view, int index) {
+        view.setTextColor(mNormalColor);
+
+        view.setGravity(Gravity.CENTER);
+        view.setPadding(0, padding, 0, padding);
+        view.setTextSize(textSize);
+        view.setLines(1);
+//        view.setTypeface(Typeface.SANS_SERIF, Typeface.BOLD);
+    }
+
     /**
      * Configures text view. Is called for the TEXT_VIEW_ITEM_RESOURCE views.
      *
      * @param view the text view to be configured
      */
     protected void configureTextView(TextView view) {
-        view.setTextColor(textColor);
-        view.setGravity(Gravity.CENTER);
-        view.setTextSize(textSize);
-        view.setLines(1);
-        view.setTypeface(Typeface.SANS_SERIF, Typeface.BOLD);
+        configureTextView(view, -1);
     }
 
     /**

@@ -7,13 +7,13 @@ import android.widget.TextView;
 
 import com.wheel.pickerview.TimePickerDialog;
 import com.wheel.pickerview.data.Type;
-import com.wheel.pickerview.listener.DateSetListener;
+import com.wheel.pickerview.listener.OnDateSetListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, DateSetListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, OnDateSetListener {
     TimePickerDialog mDialogAll;
     TimePickerDialog mDialogYearMonth;
     TimePickerDialog mDialogYearMonthDay;
@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         initView();
 
-        mDialogAll = TimePickerDialog.newIntance(this);
+        mDialogAll = TimePickerDialog.newIntance(this, Calendar.getInstance(), System.currentTimeMillis(), Type.ALL);
         mDialogYearMonth = TimePickerDialog.newIntance(this, Type.YEAR_MONTH);
         mDialogYearMonthDay = TimePickerDialog.newIntance(this, Type.YEAR_MONTH_DAY);
         mDialogMonthDayHourMinute = TimePickerDialog.newIntance(this, Type.MONTH_DAY_HOUR_MIN);
@@ -67,10 +67,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    @Override
-    public void onDateSet(TimePickerView timePickerView, Calendar calendar) {
-
-    }
 
     @Override
     public void onDateSet(TimePickerDialog timePickerDialog, Calendar calendar) {

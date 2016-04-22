@@ -14,8 +14,9 @@
         android:id="@+id/linear_wheel"
         android:layout_width="match_parent"
         android:layout_height="@dimen/picker_dialog_height"
-        android:layout_alignParentBottom="true"
         android:layout_gravity="center_horizontal"
+        android:background="@android:color/white"
+        android:orientation="horizontal"
         >
 
         <com.wheel.pickerview.wheel.WheelView
@@ -24,17 +25,20 @@
             android:layout_height="match_parent"
             android:layout_weight="1.3"/>
 
+
         <com.wheel.pickerview.wheel.WheelView
             android:id="@+id/month"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1.0"/>
 
+
         <com.wheel.pickerview.wheel.WheelView
             android:id="@+id/day"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1.0"/>
+
 
         <com.wheel.pickerview.wheel.WheelView
             android:id="@+id/hour"

@@ -43,6 +43,7 @@ public class NumericWheelAdapter extends AbstractWheelTextAdapter {
     //unit
     private String unit;
 
+
     /**
      * Constructor
      *
@@ -96,7 +97,7 @@ public class NumericWheelAdapter extends AbstractWheelTextAdapter {
     public CharSequence getItemText(int index) {
         if (index >= 0 && index < getItemsCount()) {
             int value = minValue + index;
-            String text = TextUtils.isEmpty(format) ? String.format(format, value) : Integer.toString(value);
+            String text = !TextUtils.isEmpty(format) ? String.format(format, value) : Integer.toString(value);
             text = TextUtils.isEmpty(unit) ? text : text + unit;
 
             return text;
@@ -108,4 +109,6 @@ public class NumericWheelAdapter extends AbstractWheelTextAdapter {
     public int getItemsCount() {
         return maxValue - minValue + 1;
     }
+
+
 }
