@@ -63,8 +63,6 @@ public abstract class AbstractWheelTextAdapter extends AbstractWheelAdapter {
     protected int itemTextResourceId;
     // Empty items resources
     protected int emptyItemResourceId;
-    //selector item
-    protected int currentItem;
     // Text settings
     private int mNormalColor = DEFAULT_NORMAL_TEXT_COLOR;
     private int mSelectionColor = DEFAULT_SEL_TEXT_COLOR;
@@ -228,7 +226,6 @@ public abstract class AbstractWheelTextAdapter extends AbstractWheelAdapter {
                     text = "";
                 }
                 textView.setText(text);
-
                 if (itemResourceId == TEXT_VIEW_ITEM_RESOURCE) {
                     configureTextView(textView, index);
                 }

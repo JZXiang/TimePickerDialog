@@ -57,11 +57,11 @@ public class WheelRecycle {
      * @param range     the range of current wheel items
      * @return the new value of first item number
      */
-    public int recycleItems(LinearLayout layout, int firstItem, ItemsRange range) {
+    public int recycleItems(LinearLayout layout, int firstItem, ItemsRange range, int currentItem) {
         int index = firstItem;
         for (int i = 0; i < layout.getChildCount(); ) {
             if (!range.contains(index)) {
-                recycleView(layout.getChildAt(i), index);
+                recycleView(layout.getChildAt(i), index, currentItem);
                 layout.removeViewAt(i);
                 if (i == 0) { // first item
                     firstItem++;
@@ -126,8 +126,9 @@ public class WheelRecycle {
      * @param view  the view to be cached
      * @param index the index of view
      */
-    private void recycleView(View view, int index) {
+    private void recycleView(View view, int index, int current) {
         int count = wheel.getViewAdapter().getItemsCount();
+
 
         if ((index < 0 || index >= count) && !wheel.isCyclic()) {
             // empty view

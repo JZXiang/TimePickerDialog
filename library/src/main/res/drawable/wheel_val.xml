@@ -20,13 +20,12 @@
 
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!--<stroke
-        android:width="1dp"
-        android:color="@color/picker_toolbar_bg"
-        />
-    <solid android:color="@android:color/transparent"/>
--->
-    <gradient
+    <!--<stroke-->
+    <!--android:width="1px"-->
+    <!--android:color="@color/picker_toolbar_bg"-->
+    <!--/>-->
+    <solid android:color="#10ff0000"/>
+    <!--<gradient
         android:angle="90"
         android:centerColor="#70222222"
         android:endColor="#70EEEEEE"
@@ -34,5 +33,5 @@
 
     <stroke
         android:width="1dp"
-        android:color="#70333333"/>
+        android:color="#70333333"/>-->
 </shape>

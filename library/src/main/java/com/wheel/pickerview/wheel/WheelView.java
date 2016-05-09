@@ -22,6 +22,7 @@ package com.wheel.pickerview.wheel;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.GradientDrawable.Orientation;
@@ -31,6 +32,7 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Interpolator;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.wheel.pickerview.R;
 import com.wheel.pickerview.adapters.WheelViewAdapter;
@@ -69,6 +71,7 @@ public class WheelView extends View {
     private static final int DEF_VISIBLE_ITEMS = 5;
     // Cyclic
     boolean isCyclic = false;
+    int defaultColor, selectorColor;
     // Wheel Values
     private int currentItem = 0;
     // Count of visible items
@@ -86,16 +89,14 @@ public class WheelView extends View {
     private int scrollingOffset;
     // Items layout
     private LinearLayout itemsLayout;
-
     // The number of first item in layout
     private int firstItem;
-
     // View adapter
     private WheelViewAdapter viewAdapter;
-
     // Recycle
     private WheelRecycle recycle = new WheelRecycle(this);
-
+    private Paint mPaintLineCenter, mPaintLineRight;
+    private int mLineRightMar;
     // Listeners
     private List<OnWheelChangedListener> changingListeners = new LinkedList<OnWheelChangedListener>();
     private List<OnWheelScrollListener> scrollingListeners = new LinkedList<OnWheelScrollListener>();
@@ -180,6 +181,24 @@ public class WheelView extends View {
      */
     private void initData(Context context) {
         scroller = new WheelScroller(getContext(), scrollingListener);
+
+        mPaintLineCenter = new Paint();
+        mPaintLineCenter.setColor(0xffff9292);
+        mPaintLineCenter.setAntiAlias(true);
+        mPaintLineCenter.setStrokeWidth(1);
+        mPaintLineCenter.setStyle(Paint.Style.FILL);
+
+        mPaintLineRight = new Paint();
+        mPaintLineRight.setColor(0xffe8e8e8);
+        mPaintLineRight.setAntiAlias(true);
+//        mPaintLineRight.setStrokeWidth(context.getResources().getDimensionPixelSize(R.dimen.picker_line_width));
+        mPaintLineRight.setStrokeWidth(1);
+        mPaintLineRight.setStyle(Paint.Style.FILL);
+
+        mLineRightMar = context.getResources().getDimensionPixelSize(R.dimen.picker_line_mar);
+        defaultColor = context.getResources().getColor(R.color.picker_default_text_color);
+        selectorColor = context.getResources().getColor(R.color.picker_toolbar_bg);
+
     }
 
     /**
@@ -265,6 +284,16 @@ public class WheelView extends View {
         for (OnWheelChangedListener listener : changingListeners) {
             listener.onChanged(this, oldValue, newValue);
         }
+
+        if (oldValue < 0 || newValue < 0 || itemsLayout == null)
+            return;
+
+        View oldView = itemsLayout.getChildAt(oldValue - firstItem);
+        View newView = itemsLayout.getChildAt(newValue - firstItem);
+
+        refreshTextStatus(oldView, oldValue);
+        refreshTextStatus(newView, newValue);
+
     }
 
     /**
@@ -301,6 +330,8 @@ public class WheelView extends View {
         for (OnWheelScrollListener listener : scrollingListeners) {
             listener.onScrollingFinished(this);
         }
+
+
     }
 
     /**
@@ -430,7 +461,7 @@ public class WheelView extends View {
             scrollingOffset = 0;
         } else if (itemsLayout != null) {
             // cache all items
-            recycle.recycleItems(itemsLayout, firstItem, new ItemsRange());
+            recycle.recycleItems(itemsLayout, firstItem, new ItemsRange(), currentItem);
         }
 
         invalidate();
@@ -452,8 +483,8 @@ public class WheelView extends View {
             bottomShadow = new GradientDrawable(Orientation.BOTTOM_TOP, SHADOWS_COLORS);
         }
 
-        setBackgroundResource(R.drawable.wheel_bg);
-//        setBackgroundResource(android.R.color.white);
+//        setBackgroundResource(R.drawable.wheel_bg);
+        setBackgroundResource(android.R.color.white);
     }
 
     /**
@@ -572,11 +603,9 @@ public class WheelView extends View {
         super.onDraw(canvas);
         if (viewAdapter != null && viewAdapter.getItemsCount() > 0) {
             updateView();
-
             drawItems(canvas);
             drawCenterRect(canvas);
         }
-
         drawShadows(canvas);
     }
 
@@ -587,11 +616,11 @@ public class WheelView extends View {
      */
     private void drawShadows(Canvas canvas) {
         int height = (int) (1.5 * getItemHeight());
-        topShadow.setBounds(0, 0, getWidth(), height);
-        topShadow.draw(canvas);
-
-        bottomShadow.setBounds(0, getHeight() - height, getWidth(), getHeight());
-        bottomShadow.draw(canvas);
+//        topShadow.setBounds(0, 0, getWidth(), height);
+//        topShadow.draw(canvas);
+//
+//        bottomShadow.setBounds(0, getHeight() - height, getWidth(), getHeight());
+//        bottomShadow.draw(canvas);
     }
 
     /**
@@ -620,7 +649,14 @@ public class WheelView extends View {
         int offset = (int) (getItemHeight() / 2 * 1.2);
         centerDrawable.setBounds(0, center - offset, getWidth(), center + offset);
         centerDrawable.draw(canvas);
+
+        canvas.drawLine(0, center - offset, getWidth(), center - offset, mPaintLineCenter);
+        canvas.drawLine(0, center + offset, getWidth(), center + offset, mPaintLineCenter);
+
+        int x = getWidth() - 1;
+        canvas.drawLine(x, mLineRightMar, x, getHeight() - mLineRightMar, mPaintLineRight);
     }
+
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -768,7 +804,7 @@ public class WheelView extends View {
         boolean updated = false;
         ItemsRange range = getItemsRange();
         if (itemsLayout != null) {
-            int first = recycle.recycleItems(itemsLayout, firstItem, range);
+            int first = recycle.recycleItems(itemsLayout, firstItem, range, currentItem);
             updated = firstItem != first;
             firstItem = first;
         } else {
@@ -828,7 +864,7 @@ public class WheelView extends View {
     private void buildViewForMeasuring() {
         // clear all items
         if (itemsLayout != null) {
-            recycle.recycleItems(itemsLayout, firstItem, new ItemsRange());
+            recycle.recycleItems(itemsLayout, firstItem, new ItemsRange(), currentItem);
         } else {
             createItemsLayout();
         }
@@ -851,6 +887,7 @@ public class WheelView extends View {
      */
     private boolean addViewItem(int index, boolean first) {
         View view = getItemView(index);
+        refreshTextStatus(view, index);
         if (view != null) {
             if (first) {
                 itemsLayout.addView(view, 0);
@@ -862,6 +899,17 @@ public class WheelView extends View {
         }
 
         return false;
+    }
+
+    void refreshTextStatus(View view, int index) {
+        if (!(view instanceof TextView))
+            return;
+        TextView textView = (TextView) view;
+        if (index == currentItem) {
+            textView.setTextColor(selectorColor);
+        } else {
+            textView.setTextColor(defaultColor);
+        }
     }
 
     /**
@@ -896,7 +944,10 @@ public class WheelView extends View {
 
         index %= count;
 
-        return viewAdapter.getItem(index, recycle.getItem(), itemsLayout);
+        View view = viewAdapter.getItem(index, recycle.getItem(), itemsLayout);
+
+
+        return view;
     }
 
     /**
