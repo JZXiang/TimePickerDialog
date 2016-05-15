@@ -2,22 +2,21 @@ package com.wheel.pickerview;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.ColorRes;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.wheel.pickerview.data.PickerController;
+import com.wheel.pickerview.config.PickerConfig;
 import com.wheel.pickerview.data.Type;
 import com.wheel.pickerview.data.WheelCalendar;
 import com.wheel.pickerview.listener.OnDateSetListener;
-import com.wheel.pickerview.utils.PickerContants;
-import com.wheel.pickerview.utils.Utils;
 import com.wheel.pickerview.utils.ViewController;
 import com.wheel.pickerview.view.TimeWheel;
 
@@ -26,32 +25,15 @@ import java.util.Calendar;
 /**
  * Created by jzxiang on 16/4/19.
  */
-public class TimePickerDialog extends DialogFragment implements PickerController, View.OnClickListener {
-    private OnDateSetListener mCallBack;
+public class TimePickerDialog extends DialogFragment implements View.OnClickListener {
+    PickerConfig mPickerConfig;
+    IController mIController;
     private TimeWheel mTimeWheel;
-    private TextView mTvCancel, mTvTitle, mTvSure;
-    private String mTitle;
-
     private ViewController mViewController;
 
-    private WheelCalendar mCalendarMin, mCalendarCurrent;
-    private Type mType;
-
-    public static TimePickerDialog newIntance(OnDateSetListener onDateSetListener) {
-        return newIntance(onDateSetListener, Calendar.getInstance(), 0, PickerContants.DEFAULT_TYPE);
-    }
-
-    public static TimePickerDialog newIntance(OnDateSetListener onDateSetListener, Type type) {
-        return newIntance(onDateSetListener, Calendar.getInstance(), 0, type);
-    }
-
-    public static TimePickerDialog newIntance(OnDateSetListener onDateSetListener, Calendar cllendar, Type type) {
-        return newIntance(onDateSetListener, cllendar, 0, type);
-    }
-
-    public static TimePickerDialog newIntance(OnDateSetListener onDateSetListener, Calendar calendar, long minMillSeconds, Type type) {
+    private static TimePickerDialog newIntance(PickerConfig pickerConfig) {
         TimePickerDialog timePickerDialog = new TimePickerDialog();
-        timePickerDialog.initialize(onDateSetListener, calendar, minMillSeconds, type);
+        timePickerDialog.initialize(pickerConfig);
         return timePickerDialog;
     }
 
@@ -67,118 +49,28 @@ public class TimePickerDialog extends DialogFragment implements PickerController
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.date_layout, container, false);
-        mTvCancel = (TextView) view.findViewById(R.id.tv_cancel);
-        mTvCancel.setOnClickListener(this);
-        mTvSure = (TextView) view.findViewById(R.id.tv_sure);
-        mTvSure.setOnClickListener(this);
-        mTvTitle = (TextView) view.findViewById(R.id.tv_title);
+        TextView cancel = (TextView) view.findViewById(R.id.tv_cancel);
+        cancel.setOnClickListener(this);
+        TextView sure = (TextView) view.findViewById(R.id.tv_sure);
+        sure.setOnClickListener(this);
+        TextView title = (TextView) view.findViewById(R.id.tv_title);
+        View toolbar = view.findViewById(R.id.toolbar);
 
-        if (!TextUtils.isEmpty(mTitle)) {
-            mTvTitle.setText(mTitle);
-        }
+        title.setText(mPickerConfig.mTitleStringId);
+        cancel.setText(mPickerConfig.mCancelStringId);
+        sure.setText(mPickerConfig.mSureStringId);
+        toolbar.setBackgroundColor(mPickerConfig.mThemeColor);
 
-        mTimeWheel = new TimeWheel(this, view, mType);
+        mTimeWheel = new TimeWheel(mIController, view, mPickerConfig);
         return view;
     }
 
 
-    private void initialize(OnDateSetListener onDateSetListener, Calendar defaultCalendar, long minMillseconds, Type type) {
-        mType = type;
-        mCallBack = onDateSetListener;
-        mCalendarMin = new WheelCalendar(minMillseconds);
-        mCalendarCurrent = new WheelCalendar(defaultCalendar.getTimeInMillis());
+    private void initialize(PickerConfig pickerConfig) {
+        mPickerConfig = pickerConfig;
+        mIController = new ControllerImpl(pickerConfig);
     }
 
-    @Override
-    public int getMinYear() {
-        if (isNoRange())
-            return PickerContants.DEFAULT_MIN_YEAR;
-        else
-            return mCalendarMin.year;
-    }
-
-    @Override
-    public int getMaxYear() {
-        return getMinYear() + PickerContants.YEAR_COUNT;
-    }
-
-    @Override
-    public int getMinMonth(int year) {
-        if (!isNoRange() && Utils.isTimeEquals(mCalendarMin, year))
-            return mCalendarMin.month;
-        else
-            return PickerContants.MIN_MONTH;
-    }
-
-    @Override
-    public int getMaxMonth() {
-        return PickerContants.MAX_MONTH;
-    }
-
-    @Override
-    public int getMinDay(int year, int month) {
-        if (!isNoRange() && Utils.isTimeEquals(mCalendarMin, year, month))
-            return mCalendarMin.day;
-        else
-            return PickerContants.MIN_DAY;
-    }
-
-    @Override
-    public int getMaxDay(int year, int month) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.MONTH, month - 1);
-
-        return calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-    }
-
-    @Override
-    public int getMinHour(int year, int month, int day) {
-        if (!isNoRange() && Utils.isTimeEquals(mCalendarMin, year, month, day))
-            return mCalendarMin.hour + 1;
-        else
-            return PickerContants.MIN_HOUR;
-    }
-
-    @Override
-    public int getMaxHour() {
-        return PickerContants.MAX_HOUR;
-    }
-
-    @Override
-    public int getMinMinute() {
-        return PickerContants.MIN_MINUTE;
-    }
-
-    @Override
-    public int getMaxMinute() {
-        return PickerContants.MAX_MINUTE;
-    }
-
-    @Override
-    public boolean isMinYear(int year) {
-        return Utils.isTimeEquals(mCalendarMin, year);
-    }
-
-    @Override
-    public boolean isMinMonth(int year, int month) {
-        return Utils.isTimeEquals(mCalendarMin, year, month);
-    }
-
-    @Override
-    public boolean isMinDay(int year, int month, int day) {
-        return Utils.isTimeEquals(mCalendarMin, year, month, day);
-    }
-
-    @Override
-    public boolean isNoRange() {
-        return mCalendarMin.isNoRange();
-    }
-
-    @Override
-    public WheelCalendar getDefaultCalendar() {
-        return mCalendarCurrent;
-    }
 
     @Override
     public void show(FragmentManager manager, String tag) {
@@ -186,7 +78,6 @@ public class TimePickerDialog extends DialogFragment implements PickerController
                 .setCustomAnimations(R.anim.slide_in_bottom, R.anim.slide_out_bottom)
                 .add(android.R.id.content, this)
                 .commit();
-
     }
 
     @Override
@@ -207,14 +98,6 @@ public class TimePickerDialog extends DialogFragment implements PickerController
                 }
             });
         }
-    }
-
-    public void setTitleMessage(String title) {
-        mTitle = title;
-    }
-
-    public void setTitleMessage(int title) {
-        mTitle = getContext().getString(title);
     }
 
     @Override
@@ -239,16 +122,94 @@ public class TimePickerDialog extends DialogFragment implements PickerController
     }
 
     void sureClicked() {
-        if (mCallBack != null) {
+        if (mPickerConfig.mCallBack != null) {
             Calendar calendar = Calendar.getInstance();
             calendar.set(Calendar.YEAR, mTimeWheel.getCurrentYear());
             calendar.set(Calendar.MONTH, mTimeWheel.getCurrentMonth());
             calendar.set(Calendar.DAY_OF_MONTH, mTimeWheel.getCurrentDay());
             calendar.set(Calendar.HOUR_OF_DAY, mTimeWheel.getCurrentHour());
             calendar.set(Calendar.MINUTE, mTimeWheel.getCurrentMinute());
-            mCallBack.onDateSet(this, calendar);
+            mPickerConfig.mCallBack.onDateSet(this, calendar);
         }
         dismiss();
+    }
+
+    public static class Builder {
+        PickerConfig mPickerConfig;
+
+        public Builder() {
+            mPickerConfig = new PickerConfig();
+        }
+
+        public Builder setType(Type type) {
+            mPickerConfig.mType = type;
+            return this;
+        }
+
+        public Builder setThemeColor(int color) {
+            mPickerConfig.mThemeColor = color;
+            return this;
+        }
+
+        public Builder setCancelStringId(@StringRes int id) {
+            mPickerConfig.mCancelStringId = id;
+            return this;
+        }
+
+        public Builder setSureStringId(@StringRes int id) {
+            mPickerConfig.mSureStringId = id;
+            return this;
+        }
+
+        public Builder setTitleStringId(@StringRes int id) {
+            mPickerConfig.mTitleStringId = id;
+            return this;
+        }
+
+        public Builder setToolBarTextColorId(@ColorRes int id) {
+            mPickerConfig.mToolBarTVColorId = id;
+            return this;
+        }
+
+        public Builder setWheelItemTextNormalColorId(@ColorRes int id) {
+            mPickerConfig.mWheelTVNormalColorId = id;
+            return this;
+        }
+
+        public Builder setWheelItemTextSelectorColorId(@ColorRes int id) {
+            mPickerConfig.mWheelTVSelectorColorId = id;
+            return this;
+        }
+
+        public Builder setWheelItemTextSize(int size) {
+            mPickerConfig.mWheelTVSize = size;
+            return this;
+        }
+
+        public Builder setCyclic(boolean cyclic) {
+            mPickerConfig.cyclic = cyclic;
+            return this;
+        }
+
+        public Builder setMinMillseconds(long millseconds) {
+            mPickerConfig.mMinCalendar = new WheelCalendar(millseconds);
+            return this;
+        }
+
+        public Builder setSelectorMillseconds(long millseconds) {
+            mPickerConfig.mCurrentCalendar = new WheelCalendar(millseconds);
+            return this;
+        }
+
+        public Builder setCallBack(OnDateSetListener listener) {
+            mPickerConfig.mCallBack = listener;
+            return this;
+        }
+
+        public TimePickerDialog build() {
+            return newIntance(mPickerConfig);
+        }
+
     }
 
 

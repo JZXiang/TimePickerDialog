@@ -1,10 +1,12 @@
-package com.wheel.pickerview.data;
+package com.wheel.pickerview;
 
+
+import com.wheel.pickerview.data.WheelCalendar;
 
 /**
  * Created by jzxiang on 16/4/20.
  */
-public interface PickerController {
+public interface IController {
 
     int getMinYear();
 

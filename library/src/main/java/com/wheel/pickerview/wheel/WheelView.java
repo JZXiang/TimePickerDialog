@@ -23,7 +23,6 @@ import android.content.Context;
 import android.database.DataSetObserver;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.GradientDrawable.Orientation;
 import android.util.AttributeSet;
@@ -78,8 +77,6 @@ public class WheelView extends View {
     private int visibleItems = DEF_VISIBLE_ITEMS;
     // Item height
     private int itemHeight = 0;
-    // Center Line
-    private Drawable centerDrawable;
     // Shadows drawables
     private GradientDrawable topShadow;
     private GradientDrawable bottomShadow;
@@ -95,7 +92,7 @@ public class WheelView extends View {
     private WheelViewAdapter viewAdapter;
     // Recycle
     private WheelRecycle recycle = new WheelRecycle(this);
-    private Paint mPaintLineCenter, mPaintLineRight;
+    private Paint mPaintLineCenter, mPaintLineRight, mPaintRectCenter;
     private int mLineRightMar;
     // Listeners
     private List<OnWheelChangedListener> changingListeners = new LinkedList<OnWheelChangedListener>();
@@ -194,6 +191,12 @@ public class WheelView extends View {
 //        mPaintLineRight.setStrokeWidth(context.getResources().getDimensionPixelSize(R.dimen.picker_line_width));
         mPaintLineRight.setStrokeWidth(1);
         mPaintLineRight.setStyle(Paint.Style.FILL);
+
+        mPaintRectCenter = new Paint();
+        mPaintRectCenter.setColor(0xffff9292);
+        mPaintRectCenter.setAlpha((int) (0.1 * 255));
+        mPaintRectCenter.setAntiAlias(true);
+        mPaintRectCenter.setStyle(Paint.Style.FILL);
 
         mLineRightMar = context.getResources().getDimensionPixelSize(R.dimen.picker_line_mar);
         defaultColor = context.getResources().getColor(R.color.picker_default_text_color);
@@ -471,10 +474,6 @@ public class WheelView extends View {
      * Initializes resources
      */
     private void initResourcesIfNecessary() {
-        if (centerDrawable == null) {
-            centerDrawable = getContext().getResources().getDrawable(R.drawable.wheel_val);
-        }
-
         if (topShadow == null) {
             topShadow = new GradientDrawable(Orientation.TOP_BOTTOM, SHADOWS_COLORS);
         }
@@ -483,7 +482,6 @@ public class WheelView extends View {
             bottomShadow = new GradientDrawable(Orientation.BOTTOM_TOP, SHADOWS_COLORS);
         }
 
-//        setBackgroundResource(R.drawable.wheel_bg);
         setBackgroundResource(android.R.color.white);
     }
 
@@ -647,8 +645,9 @@ public class WheelView extends View {
     private void drawCenterRect(Canvas canvas) {
         int center = getHeight() / 2;
         int offset = (int) (getItemHeight() / 2 * 1.2);
-        centerDrawable.setBounds(0, center - offset, getWidth(), center + offset);
-        centerDrawable.draw(canvas);
+//        centerDrawable.setBounds(0, center - offset, getWidth(), center + offset);
+//        centerDrawable.draw(canvas);
+        canvas.drawRect(0, center - offset, getWidth(), center + offset, mPaintRectCenter);
 
         canvas.drawLine(0, center - offset, getWidth(), center - offset, mPaintLineCenter);
         canvas.drawLine(0, center + offset, getWidth(), center + offset, mPaintLineCenter);

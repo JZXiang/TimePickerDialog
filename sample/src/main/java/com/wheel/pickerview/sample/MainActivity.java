@@ -29,11 +29,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         initView();
 
-        mDialogAll = TimePickerDialog.newIntance(this, Calendar.getInstance(), System.currentTimeMillis(), Type.ALL);
-        mDialogYearMonth = TimePickerDialog.newIntance(this, Type.YEAR_MONTH);
-        mDialogYearMonthDay = TimePickerDialog.newIntance(this, Type.YEAR_MONTH_DAY);
-        mDialogMonthDayHourMinute = TimePickerDialog.newIntance(this, Type.MONTH_DAY_HOUR_MIN);
-        mDialogHourMinute = TimePickerDialog.newIntance(this, Type.HOURS_MINS);
+        mDialogAll = new TimePickerDialog.Builder()
+                .setMinMillseconds(System.currentTimeMillis())
+                .setThemeColor(R.color.colorPrimary)
+                .setCallBack(this)
+                .build();
+        mDialogYearMonth = new TimePickerDialog.Builder()
+                .setType(Type.YEAR_MONTH)
+                .setThemeColor(getResources().getColor(android.R.color.background_dark))
+                .setWheelItemTextNormalColorId(R.color.picker_default_text_color)
+                .setWheelItemTextSelectorColorId(android.R.color.holo_blue_bright)
+                .setCallBack(this)
+                .build();
+        mDialogYearMonthDay = new TimePickerDialog.Builder()
+                .setType(Type.YEAR_MONTH_DAY)
+                .setCallBack(this)
+                .build();
+        mDialogMonthDayHourMinute = new TimePickerDialog.Builder()
+                .setType(Type.MONTH_DAY_HOUR_MIN)
+                .setCallBack(this)
+                .build();
+        mDialogHourMinute = new TimePickerDialog.Builder()
+                .setType(Type.HOURS_MINS)
+                .setCallBack(this)
+                .build();
     }
 
     void initView() {

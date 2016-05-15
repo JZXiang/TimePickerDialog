@@ -1,12 +1,10 @@
 package com.wheel.pickerview.utils;
 
-import com.wheel.pickerview.data.Type;
-
 /**
  * Created by jzxiang on 16/4/20.
  */
 public class PickerContants {
-    public static final Type DEFAULT_TYPE = Type.ALL;
+
 
     public static final String YEAR = "年";
     public static final String MONTH = "月";

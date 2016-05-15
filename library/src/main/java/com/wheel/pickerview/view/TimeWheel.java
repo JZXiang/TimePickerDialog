@@ -3,10 +3,10 @@ package com.wheel.pickerview.view;
 import android.content.Context;
 import android.view.View;
 
+import com.wheel.pickerview.IController;
 import com.wheel.pickerview.R;
 import com.wheel.pickerview.adapters.NumericWheelAdapter;
-import com.wheel.pickerview.data.PickerController;
-import com.wheel.pickerview.data.Type;
+import com.wheel.pickerview.config.PickerConfig;
 import com.wheel.pickerview.utils.PickerContants;
 import com.wheel.pickerview.utils.Utils;
 import com.wheel.pickerview.wheel.OnWheelChangedListener;
@@ -18,16 +18,14 @@ import java.util.Calendar;
  * Created by jzxiang on 16/4/20.
  */
 public class TimeWheel {
-    private View mView;
-    private Type mType;
-    private Context mContext;
+    Context mContext;
 
-    private WheelView year, month, day, hour, minute;
-    private NumericWheelAdapter mYearAdapter, mMonthAdapter, mDayAdapter, mHourAdapter, mMinuteAdapter;
+    WheelView year, month, day, hour, minute;
+    NumericWheelAdapter mYearAdapter, mMonthAdapter, mDayAdapter, mHourAdapter, mMinuteAdapter;
 
-    private int mTextSize;
+    IController mIController;
+    PickerConfig mPickerConfig;
 
-    private PickerController mPickerController;
     OnWheelChangedListener yearListener = new OnWheelChangedListener() {
         @Override
         public void onChanged(WheelView wheel, int oldValue, int newValue) {
@@ -47,30 +45,17 @@ public class TimeWheel {
         }
     };
 
-    public TimeWheel(PickerController pickerController, View view) {
-        this(pickerController, view, PickerContants.DEFAULT_TYPE);
-    }
 
-    public TimeWheel(PickerController pickerController, View view, Type type) {
-        mPickerController = pickerController;
-        mView = view;
-        mType = type;
+    public TimeWheel(IController iController, View view, PickerConfig pickerConfig) {
+        mIController = iController;
+        mPickerConfig = pickerConfig;
         mContext = view.getContext();
-
-//        mTextSize = mContext.getResources().getDimensionPixelSize(R.dimen.picker_default_text_size);
-        mTextSize = 18;
-
-        initialize();
-    }
-
-    public void setTextSize(int textSize) {
-        mTextSize = textSize;
-        initialize();
+        initialize(view);
     }
 
 
-    public void initialize() {
-        initView();
+    public void initialize(View view) {
+        initView(view);
         initYear();
         initMonth();
         initDay();
@@ -78,14 +63,14 @@ public class TimeWheel {
         initMinute();
     }
 
-    void initView() {
-        year = (WheelView) mView.findViewById(R.id.year);
-        month = (WheelView) mView.findViewById(R.id.month);
-        day = (WheelView) mView.findViewById(R.id.day);
-        hour = (WheelView) mView.findViewById(R.id.hour);
-        minute = (WheelView) mView.findViewById(R.id.minute);
+    void initView(View view) {
+        year = (WheelView) view.findViewById(R.id.year);
+        month = (WheelView) view.findViewById(R.id.month);
+        day = (WheelView) view.findViewById(R.id.day);
+        hour = (WheelView) view.findViewById(R.id.hour);
+        minute = (WheelView) view.findViewById(R.id.minute);
 
-        switch (mType) {
+        switch (mPickerConfig.mType) {
             case ALL:
 
                 break;
@@ -112,19 +97,20 @@ public class TimeWheel {
     }
 
     void initYear() {
-        int minYear = mPickerController.getMinYear();
-        int maxYear = mPickerController.getMaxYear();
+        int minYear = mIController.getMinYear();
+        int maxYear = mIController.getMaxYear();
         mYearAdapter = new NumericWheelAdapter(mContext, minYear, maxYear, PickerContants.FORMAT, PickerContants.YEAR);
-        mYearAdapter.setTextSize(mTextSize);
+        mYearAdapter.setTextSize(mPickerConfig.mWheelTVSize);
         year.setViewAdapter(mYearAdapter);
-        year.setCurrentItem(mPickerController.getDefaultCalendar().year - minYear);
+        year.setCurrentItem(mIController.getDefaultCalendar().year - minYear);
     }
 
     void initMonth() {
         updateMonths();
         int curYear = getCurrentYear();
-        int minMonth = mPickerController.getMinMonth(curYear);
-        month.setCurrentItem(mPickerController.getDefaultCalendar().month - minMonth);
+        int minMonth = mIController.getMinMonth(curYear);
+        month.setCurrentItem(mIController.getDefaultCalendar().month - minMonth);
+        month.setCyclic(true);
     }
 
     void initDay() {
@@ -132,8 +118,9 @@ public class TimeWheel {
         int curYear = getCurrentYear();
         int curMonth = getCurrentMonth();
 
-        int minDay = mPickerController.getMinDay(curYear, curMonth);
-        day.setCurrentItem(mPickerController.getDefaultCalendar().day - minDay);
+        int minDay = mIController.getMinDay(curYear, curMonth);
+        day.setCurrentItem(mIController.getDefaultCalendar().day - minDay);
+        day.setCyclic(true);
     }
 
     void initHour() {
@@ -142,15 +129,17 @@ public class TimeWheel {
         int curMonth = getCurrentMonth();
         int curDay = getCurrentDay();
 
-        int minHour = mPickerController.getMinHour(curYear, curMonth, curDay);
-        hour.setCurrentItem(mPickerController.getDefaultCalendar().hour - minHour);
+        int minHour = mIController.getMinHour(curYear, curMonth, curDay);
+        hour.setCurrentItem(mIController.getDefaultCalendar().hour - minHour);
+        hour.setCyclic(true);
     }
 
     void initMinute() {
-        int minMinute = mPickerController.getMinMinute();
-        int maxMinute = mPickerController.getMaxMinute();
+        int minMinute = mIController.getMinMinute();
+        int maxMinute = mIController.getMaxMinute();
         mMinuteAdapter = new NumericWheelAdapter(mContext, minMinute, maxMinute, PickerContants.FORMAT, PickerContants.MINUTE);
-        mMinuteAdapter.setTextSize(mTextSize);
+        mMinuteAdapter.setTextSize(mPickerConfig.mWheelTVSize);
+        minute.setCyclic(true);
         minute.setViewAdapter(mMinuteAdapter);
     }
 
@@ -159,13 +148,13 @@ public class TimeWheel {
             return;
 
         int curYear = getCurrentYear();
-        int minMonth = mPickerController.getMinMonth(curYear);
-        int maxMonth = mPickerController.getMaxMonth();
+        int minMonth = mIController.getMinMonth(curYear);
+        int maxMonth = mIController.getMaxMonth();
         mMonthAdapter = new NumericWheelAdapter(mContext, minMonth, maxMonth, PickerContants.FORMAT, PickerContants.MONTH);
-        mMonthAdapter.setTextSize(mTextSize);
+        mMonthAdapter.setTextSize(mPickerConfig.mWheelTVSize);
         month.setViewAdapter(mMonthAdapter);
 
-        if (mPickerController.isMinYear(curYear)) {
+        if (mIController.isMinYear(curYear)) {
             month.setCurrentItem(0, false);
         }
     }
@@ -181,13 +170,13 @@ public class TimeWheel {
         calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) + year.getCurrentItem());
         calendar.set(Calendar.MONTH, curMonth);
 
-        int maxDay = mPickerController.getMaxDay(curYear, curMonth);
-        int minDay = mPickerController.getMinDay(curYear, curMonth);
+        int maxDay = mIController.getMaxDay(curYear, curMonth);
+        int minDay = mIController.getMinDay(curYear, curMonth);
         mDayAdapter = new NumericWheelAdapter(mContext, minDay, maxDay, PickerContants.FORMAT, PickerContants.DAY);
-        mDayAdapter.setTextSize(mTextSize);
+        mDayAdapter.setTextSize(mPickerConfig.mWheelTVSize);
         day.setViewAdapter(mDayAdapter);
 
-        if (mPickerController.isMinMonth(curYear, curMonth)) {
+        if (mIController.isMinMonth(curYear, curMonth)) {
             day.setCurrentItem(0, true);
         }
 
@@ -205,41 +194,41 @@ public class TimeWheel {
         int curMonth = getCurrentMonth();
         int curDay = getCurrentDay();
 
-        int minHour = mPickerController.getMinHour(curYear, curMonth, curDay);
-        int maxHour = mPickerController.getMaxHour();
+        int minHour = mIController.getMinHour(curYear, curMonth, curDay);
+        int maxHour = mIController.getMaxHour();
 
         mHourAdapter = new NumericWheelAdapter(mContext, minHour, maxHour, PickerContants.FORMAT, PickerContants.HOUR);
-        mHourAdapter.setTextSize(mTextSize);
+        mHourAdapter.setTextSize(mPickerConfig.mWheelTVSize);
         hour.setViewAdapter(mHourAdapter);
 
-        if (mPickerController.isMinDay(curYear, curMonth, curDay))
+        if (mIController.isMinDay(curYear, curMonth, curDay))
             hour.setCurrentItem(0, false);
     }
 
     public int getCurrentYear() {
-        return year.getCurrentItem() + mPickerController.getMinYear();
+        return year.getCurrentItem() + mIController.getMinYear();
     }
 
     public int getCurrentMonth() {
         int curYear = getCurrentYear();
-        return month.getCurrentItem() + +mPickerController.getMinMonth(curYear);
+        return month.getCurrentItem() + +mIController.getMinMonth(curYear);
     }
 
     public int getCurrentDay() {
         int curYear = getCurrentYear();
         int curMonth = getCurrentMonth();
-        return day.getCurrentItem() + mPickerController.getMinDay(curYear, curMonth);
+        return day.getCurrentItem() + mIController.getMinDay(curYear, curMonth);
     }
 
     public int getCurrentHour() {
         int curYear = getCurrentYear();
         int curMonth = getCurrentMonth();
         int curDay = getCurrentDay();
-        return hour.getCurrentItem() + mPickerController.getMinHour(curYear, curMonth, curDay);
+        return hour.getCurrentItem() + mIController.getMinHour(curYear, curMonth, curDay);
     }
 
     public int getCurrentMinute() {
-        return minute.getCurrentItem() + mPickerController.getMinMinute();
+        return minute.getCurrentItem() + mIController.getMinMinute();
     }
 
 
