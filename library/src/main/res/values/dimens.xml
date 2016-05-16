@@ -6,4 +6,5 @@
     <dimen name="textview_default_padding">5dp</dimen>
     <dimen name="picker_line_width">1dp</dimen>
     <dimen name="picker_line_mar">15dp</dimen>
+    <dimen name="picker_height">230dp</dimen>
 </resources>

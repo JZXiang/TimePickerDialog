@@ -9,7 +9,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.wheel.pickerview.sample.MainActivity">
+    tools:context="com.jzxiang.pickerview.sample.MainActivity">
 
     <Button
         android:id="@+id/btn_all"
