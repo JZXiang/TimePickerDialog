@@ -1,25 +1,25 @@
 ##### Welcome to follow me on GitHub
 GitHub: https://github.com/JZXiang
 
----git 
+---
 
 [中文版文档](https://github.com/JZXiang/TimePickerDialog/blob/master/README-cn.md)
 # TimerPickerDialog
-An Android time picker library.
-It's easy to use.
-It supports five types.(YEAR_MONTH,YEAR_MONTH_DAY,MONTH_DAY_HOUR_MINUTE,YEAR_MONTH_DAY_HOUR_MINUTE,HOUR_MINUTE)
-It can set the minimum millseconds.
+An Android time picker library.  
+It's easy to use.  
+Supports five types.(YEAR_MONTH,YEAR_MONTH_DAY,MONTH_DAY_HOUR_MINUTE,YEAR_MONTH_DAY_HOUR_MINUTE,HOUR_MINUTE)  
+It can set the minimum millseconds.  
 
 [Download APK](https://github.com/JZXiang/PickerView/raw/master/sample-debug.apk)
 
-## 使用gradle 依赖:
+## gradle, latest version:
 ```java
    compile 'com.jzxiang.pickerview:TimePickerDialog:0.9.2'
 ```
-## Demo 图片
+## Demo picture
 ![](https://github.com/JZXiang/PickerView/raw/master/preview/timepickerdialog_demo.gif)
 
-## 示例配置
+## An example configuration
 ```java
     mDialogAll = new TimePickerDialog.Builder()
                     .setCallBack(this)
