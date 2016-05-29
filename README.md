@@ -1,6 +1,7 @@
 ##### Welcome to follow me on GitHub
 GitHub: https://github.com/JZXiang
-----------------------------------
+
+---git 
 
 [中文版文档](https://github.com/JZXiang/TimePickerDialog/blob/master/README-cn.md)
 # TimerPickerDialog
