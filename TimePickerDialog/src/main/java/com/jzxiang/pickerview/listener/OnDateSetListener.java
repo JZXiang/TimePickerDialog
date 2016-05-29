@@ -9,5 +9,5 @@ import java.util.Calendar;
  */
 public interface OnDateSetListener {
 
-    void onDateSet(TimePickerDialog timePickerView, Calendar calendar);
+    void onDateSet(TimePickerDialog timePickerView, long millseconds);
 }

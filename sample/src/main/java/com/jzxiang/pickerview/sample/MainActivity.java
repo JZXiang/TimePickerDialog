@@ -87,8 +87,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     @Override
-    public void onDateSet(TimePickerDialog timePickerDialog, Calendar calendar) {
-        String text = getDateToString(calendar.getTimeInMillis());
+    public void onDateSet(TimePickerDialog timePickerDialog, long millseconds) {
+        String text = getDateToString(millseconds);
         mTvTime.setText(text);
     }
 

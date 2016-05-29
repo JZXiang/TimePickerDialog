@@ -29,6 +29,7 @@ public class TimePickerDialog extends DialogFragment implements View.OnClickList
     PickerConfig mPickerConfig;
     IController mIController;
     private TimeWheel mTimeWheel;
+    private long mCurrentMillSeconds;
 
     private static TimePickerDialog newIntance(PickerConfig pickerConfig) {
         TimePickerDialog timePickerDialog = new TimePickerDialog();
@@ -98,16 +99,28 @@ public class TimePickerDialog extends DialogFragment implements View.OnClickList
         }
     }
 
+    public long getCurrentMillSeconds() {
+        if (mCurrentMillSeconds == 0)
+            return System.currentTimeMillis();
+
+        return mCurrentMillSeconds;
+    }
+
 
     void sureClicked() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.clear();
+        int day = mTimeWheel.getCurrentDay();
+
+        calendar.set(Calendar.YEAR, mTimeWheel.getCurrentYear());
+        calendar.set(Calendar.MONTH, mTimeWheel.getCurrentMonth() - 1);
+        calendar.set(Calendar.DAY_OF_MONTH, mTimeWheel.getCurrentDay());
+        calendar.set(Calendar.HOUR_OF_DAY, mTimeWheel.getCurrentHour());
+        calendar.set(Calendar.MINUTE, mTimeWheel.getCurrentMinute());
+
+        mCurrentMillSeconds = calendar.getTimeInMillis();
         if (mPickerConfig.mCallBack != null) {
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.YEAR, mTimeWheel.getCurrentYear());
-            calendar.set(Calendar.MONTH, mTimeWheel.getCurrentMonth());
-            calendar.set(Calendar.DAY_OF_MONTH, mTimeWheel.getCurrentDay());
-            calendar.set(Calendar.HOUR_OF_DAY, mTimeWheel.getCurrentHour());
-            calendar.set(Calendar.MINUTE, mTimeWheel.getCurrentMinute());
-            mPickerConfig.mCallBack.onDateSet(this, calendar);
+            mPickerConfig.mCallBack.onDateSet(this, mCurrentMillSeconds);
         }
         dismiss();
     }
