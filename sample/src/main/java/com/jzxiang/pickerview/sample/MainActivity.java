@@ -30,11 +30,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initView();
 
         mDialogAll = new TimePickerDialog.Builder()
-                .setMinMillseconds(System.currentTimeMillis())
-                .setThemeColor(R.color.colorPrimary)
-                .setWheelItemTextSize(16)
                 .setCallBack(this)
+                .setCancelStringId("cancel")
+                .setSureStringId("sure")
+                .setTitleStringId("TimePicker")
+                .setCyclic(false)
+                .setMinMillseconds(System.currentTimeMillis())
+                .setCurrentMillseconds(System.currentTimeMillis())
+                .setThemeColor(getResources().getColor(R.color.timepicker_dialog_bg))
+                .setType(Type.ALL)
+                .setWheelItemTextNormalColor(getResources().getColor(R.color.timetimepicker_default_text_color))
+                .setWheelItemTextSelectorColor(getResources().getColor(R.color.timepicker_toolbar_bg))
+                .setWheelItemTextSize(12)
                 .build();
+
+//        mDialogAll = new TimePickerDialog.Builder()
+//                .setMinMillseconds(System.currentTimeMillis())
+//                .setThemeColor(R.color.colorPrimary)
+//                .setWheelItemTextSize(16)
+//                .setCallBack(this)
+//                .build();
         mDialogYearMonth = new TimePickerDialog.Builder()
                 .setType(Type.YEAR_MONTH)
                 .setThemeColor(getResources().getColor(R.color.colorPrimary))

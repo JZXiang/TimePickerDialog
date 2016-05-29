@@ -157,17 +157,17 @@ public class TimePickerDialog extends DialogFragment implements View.OnClickList
             return this;
         }
 
-        public Builder setToolBarTextColorId(int color) {
+        public Builder setToolBarTextColor(int color) {
             mPickerConfig.mToolBarTVColor = color;
             return this;
         }
 
-        public Builder setWheelItemTextNormalColorId(int color) {
+        public Builder setWheelItemTextNormalColor(int color) {
             mPickerConfig.mWheelTVNormalColor = color;
             return this;
         }
 
-        public Builder setWheelItemTextSelectorColorId(int color) {
+        public Builder setWheelItemTextSelectorColor(int color) {
             mPickerConfig.mWheelTVSelectorColor = color;
             return this;
         }
@@ -187,7 +187,7 @@ public class TimePickerDialog extends DialogFragment implements View.OnClickList
             return this;
         }
 
-        public Builder setSelectorMillseconds(long millseconds) {
+        public Builder setCurrentMillseconds(long millseconds) {
             mPickerConfig.mCurrentCalendar = new WheelCalendar(millseconds);
             return this;
         }
