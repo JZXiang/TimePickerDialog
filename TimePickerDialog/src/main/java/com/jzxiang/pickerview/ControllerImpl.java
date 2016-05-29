@@ -58,6 +58,7 @@ public class ControllerImpl implements IController {
     public int getMaxDay(int year, int month) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.DATE, 1);
         calendar.set(Calendar.MONTH, month - 1);
 
         return calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
