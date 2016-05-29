@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom"
+    android:orientation="vertical"
+    >
+
+    <include
+        layout="@layout/timepicker_toolbar"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/picker_dialog_height">
+
+        <LinearLayout
+            android:id="@+id/linear_wheel"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/picker_dialog_height"
+            android:layout_gravity="center_horizontal"
+            android:background="@android:color/white"
+            android:orientation="horizontal"
+            >
+
+            <com.jzxiang.pickerview.wheel.WheelView
+                android:id="@+id/year"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.3"/>
+
+
+            <com.jzxiang.pickerview.wheel.WheelView
+                android:id="@+id/month"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.0"/>
+
+
+            <com.jzxiang.pickerview.wheel.WheelView
+                android:id="@+id/day"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.0"/>
+
+
+            <com.jzxiang.pickerview.wheel.WheelView
+                android:id="@+id/hour"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.0"/>
+
+            <com.jzxiang.pickerview.wheel.WheelView
+                android:id="@+id/minute"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.0"/>
+        </LinearLayout>
+
+    </FrameLayout>
+
+
+</LinearLayout>
+
+

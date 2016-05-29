@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <color name="picker_default_text_color">#999999</color>
-    <color name="picker_toolbar_bg">#e60012</color>
-    <color name="picker_dialog_bg">#80000000</color>
-    <color name="picker_line">#e8e8e8</color>
-</resources>

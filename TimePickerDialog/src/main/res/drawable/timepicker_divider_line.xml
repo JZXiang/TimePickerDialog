@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+       android:shape="line">
+
+    <solid android:color="@color/timepicker_line"/>
+    <size
+        android:width="@dimen/picker_line_width"
+        />
+    <padding
+        android:bottom="@dimen/picker_line_mar"
+        android:top="@dimen/picker_line_mar"/>
+</shape>
+
