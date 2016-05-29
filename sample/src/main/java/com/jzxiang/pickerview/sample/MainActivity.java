@@ -37,8 +37,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .build();
         mDialogYearMonth = new TimePickerDialog.Builder()
                 .setType(Type.YEAR_MONTH)
-                .setThemeColor(getResources().getColor(android.R.color.background_dark))
-                .setWheelItemTextSelectorColorId(android.R.color.holo_blue_bright)
+                .setThemeColor(getResources().getColor(R.color.colorPrimary))
                 .setCallBack(this)
                 .build();
         mDialogYearMonthDay = new TimePickerDialog.Builder()

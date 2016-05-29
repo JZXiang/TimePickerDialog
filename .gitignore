@@ -8,7 +8,6 @@
 /captures
 ### Android ###
 # Built application files
-*.apk
 *.ap_
 # Files for the Dalvik VM
 *.dex
@@ -88,3 +87,6 @@ atlassian-ide-plugin.xml
 com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
+TimePickerDialog/libs/
+sample/libs/
+sample/src/main/res/drawable/
