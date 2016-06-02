@@ -98,7 +98,13 @@ public class TimePickerDialog extends DialogFragment implements View.OnClickList
             sureClicked();
         }
     }
-
+    
+    /*
+    * @desc This method returns the current milliseconds. If current milliseconds is not set,
+    *       this will return the system milliseconds.
+    * @param none
+    * @return long - the current milliseconds.
+    */
     public long getCurrentMillSeconds() {
         if (mCurrentMillSeconds == 0)
             return System.currentTimeMillis();
@@ -106,7 +112,12 @@ public class TimePickerDialog extends DialogFragment implements View.OnClickList
         return mCurrentMillSeconds;
     }
 
-
+    /*
+    * @desc This method is called when onClick method is invoked by sure button. A Calendar instance is created and 
+    *       initialized. 
+    * @param none
+    * @return none
+    */
     void sureClicked() {
         Calendar calendar = Calendar.getInstance();
         calendar.clear();
