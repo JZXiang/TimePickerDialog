@@ -1,8 +1,7 @@
 # ChangeLog
 
 ### 0.9.3
-* Add some functions of set the time unit.  
-An example configuration
+* Add some functions to set the time unit.  
 ``` java
     mDialogAll = new TimePickerDialog.Builder()
                 .setCallBack(this)
