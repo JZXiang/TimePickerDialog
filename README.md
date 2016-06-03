@@ -15,7 +15,7 @@ It can set the minimum millseconds.
 
 ## gradle, latest version:
 ```java
-   compile 'com.jzxiang.pickerview:TimePickerDialog:0.9.2'
+   compile 'com.jzxiang.pickerview:TimePickerDialog:0.9.3'
 ```
 ## Demo picture
 ![](https://github.com/JZXiang/PickerView/raw/master/preview/timepickerdialog_demo.gif)
@@ -43,7 +43,7 @@ It can set the minimum millseconds.
 License
 -------
 
-    Copyright 2016 Jake Wharton
+    Copyright 2016 JZXiang
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.

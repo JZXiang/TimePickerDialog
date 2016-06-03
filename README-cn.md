@@ -12,7 +12,7 @@ Android时间选择器，支持年月日时分，年月日，年月，月日时�
 
 ## 使用gradle 依赖:
 ```java
-   compile 'com.jzxiang.pickerview:TimePickerDialog:0.9.2'
+   compile 'com.jzxiang.pickerview:TimePickerDialog:0.9.3'
 ```
 ## Demo 图片
 ![](https://github.com/JZXiang/PickerView/raw/master/preview/timepickerdialog_demo.gif)
@@ -40,7 +40,7 @@ Android时间选择器，支持年月日时分，年月日，年月，月日时�
 License
 -------
 
-    Copyright 2016 Jake Wharton
+    Copyright 2016 JZXiang
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
