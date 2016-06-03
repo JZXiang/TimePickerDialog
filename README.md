@@ -10,7 +10,7 @@ It's easy to use.
 Supports five types.(YEAR_MONTH,YEAR_MONTH_DAY,MONTH_DAY_HOUR_MINUTE,YEAR_MONTH_DAY_HOUR_MINUTE,HOUR_MINUTE)  
 It can set the minimum millseconds.  
 
-[ChangeLog](https://github.com/JZXiang/TimePickerDialog/blob/master/change_log.md)
+[ChangeLog](https://github.com/JZXiang/TimePickerDialog/blob/master/change_log.md)  
 [Download APK](https://github.com/JZXiang/PickerView/raw/master/sample-debug.apk)
 
 ## gradle, latest version:
