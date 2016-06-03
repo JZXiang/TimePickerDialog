@@ -4,13 +4,6 @@ package com.jzxiang.pickerview.utils;
  * Created by jzxiang on 16/4/20.
  */
 public class PickerContants {
-
-
-    public static final String YEAR = "年";
-    public static final String MONTH = "月";
-    public static final String DAY = "日";
-    public static final String HOUR = "时";
-    public static final String MINUTE = "分";
     public static final String FORMAT = "%02d";
 
     public static final int DEFAULT_MIN_YEAR = 2015;

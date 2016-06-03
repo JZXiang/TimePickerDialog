@@ -22,12 +22,19 @@ public class PickerConfig {
     public int mWheelTVSelectorColor = DefaultConfig.TV_SELECTOR_COLOR;
     public int mWheelTVSize = DefaultConfig.TV_SIZE;
     public boolean cyclic = DefaultConfig.CYCLIC;
+
+    public String mYear = DefaultConfig.YEAR;
+    public String mMonth = DefaultConfig.MONTH;
+    public String mDay = DefaultConfig.DAY;
+    public String mHour = DefaultConfig.HOUR;
+    public String mMinute = DefaultConfig.MINUTE;
+
     /**
-     * 显示的最小时间
+     * The min timeMillseconds
      */
     public WheelCalendar mMinCalendar = new WheelCalendar(0);
     /**
-     * 当前时间
+     * The default selector timeMillseconds
      */
     public WheelCalendar mCurrentCalendar = new WheelCalendar(System.currentTimeMillis());
 

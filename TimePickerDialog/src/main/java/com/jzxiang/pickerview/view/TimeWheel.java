@@ -2,7 +2,6 @@ package com.jzxiang.pickerview.view;
 
 import android.content.Context;
 import android.view.View;
-
 import com.jzxiang.pickerview.IController;
 import com.jzxiang.pickerview.R;
 import com.jzxiang.pickerview.adapters.NumericWheelAdapter;
@@ -11,9 +10,7 @@ import com.jzxiang.pickerview.utils.PickerContants;
 import com.jzxiang.pickerview.utils.Utils;
 import com.jzxiang.pickerview.wheel.OnWheelChangedListener;
 import com.jzxiang.pickerview.wheel.WheelView;
-
 import java.util.Calendar;
-
 
 /**
  * Created by jzxiang on 16/4/20.
@@ -64,6 +61,7 @@ public class TimeWheel {
         initMinute();
     }
 
+
     void initView(View view) {
         year = (WheelView) view.findViewById(R.id.year);
         month = (WheelView) view.findViewById(R.id.month);
@@ -100,7 +98,8 @@ public class TimeWheel {
     void initYear() {
         int minYear = mIController.getMinYear();
         int maxYear = mIController.getMaxYear();
-        mYearAdapter = new NumericWheelAdapter(mContext, minYear, maxYear, PickerContants.FORMAT, PickerContants.YEAR);
+
+        mYearAdapter = new NumericWheelAdapter(mContext, minYear, maxYear, PickerContants.FORMAT, mPickerConfig.mYear);
         mYearAdapter.setConfig(mPickerConfig);
         year.setViewAdapter(mYearAdapter);
         year.setCurrentItem(mIController.getDefaultCalendar().year - minYear);
@@ -138,7 +137,7 @@ public class TimeWheel {
     void initMinute() {
         int minMinute = mIController.getMinMinute();
         int maxMinute = mIController.getMaxMinute();
-        mMinuteAdapter = new NumericWheelAdapter(mContext, minMinute, maxMinute, PickerContants.FORMAT, PickerContants.MINUTE);
+        mMinuteAdapter = new NumericWheelAdapter(mContext, minMinute, maxMinute, PickerContants.FORMAT, mPickerConfig.mMinute);
         mMinuteAdapter.setConfig(mPickerConfig);
         minute.setCyclic(mPickerConfig.cyclic);
         minute.setViewAdapter(mMinuteAdapter);
@@ -151,7 +150,7 @@ public class TimeWheel {
         int curYear = getCurrentYear();
         int minMonth = mIController.getMinMonth(curYear);
         int maxMonth = mIController.getMaxMonth();
-        mMonthAdapter = new NumericWheelAdapter(mContext, minMonth, maxMonth, PickerContants.FORMAT, PickerContants.MONTH);
+        mMonthAdapter = new NumericWheelAdapter(mContext, minMonth, maxMonth, PickerContants.FORMAT, mPickerConfig.mMonth);
         mMonthAdapter.setConfig(mPickerConfig);
         month.setViewAdapter(mMonthAdapter);
 
@@ -173,7 +172,7 @@ public class TimeWheel {
 
         int maxDay = mIController.getMaxDay(curYear, curMonth);
         int minDay = mIController.getMinDay(curYear, curMonth);
-        mDayAdapter = new NumericWheelAdapter(mContext, minDay, maxDay, PickerContants.FORMAT, PickerContants.DAY);
+        mDayAdapter = new NumericWheelAdapter(mContext, minDay, maxDay, PickerContants.FORMAT, mPickerConfig.mDay);
         mDayAdapter.setConfig(mPickerConfig);
         day.setViewAdapter(mDayAdapter);
 
@@ -198,7 +197,7 @@ public class TimeWheel {
         int minHour = mIController.getMinHour(curYear, curMonth, curDay);
         int maxHour = mIController.getMaxHour();
 
-        mHourAdapter = new NumericWheelAdapter(mContext, minHour, maxHour, PickerContants.FORMAT, PickerContants.HOUR);
+        mHourAdapter = new NumericWheelAdapter(mContext, minHour, maxHour, PickerContants.FORMAT, mPickerConfig.mHour);
         mHourAdapter.setConfig(mPickerConfig);
         hour.setViewAdapter(mHourAdapter);
 

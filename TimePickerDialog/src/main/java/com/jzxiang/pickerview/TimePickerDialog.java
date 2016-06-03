@@ -13,13 +13,11 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
-
 import com.jzxiang.pickerview.config.PickerConfig;
 import com.jzxiang.pickerview.data.Type;
 import com.jzxiang.pickerview.data.WheelCalendar;
 import com.jzxiang.pickerview.listener.OnDateSetListener;
 import com.jzxiang.pickerview.view.TimeWheel;
-
 import java.util.Calendar;
 
 /**
@@ -200,6 +198,31 @@ public class TimePickerDialog extends DialogFragment implements View.OnClickList
 
         public Builder setCurrentMillseconds(long millseconds) {
             mPickerConfig.mCurrentCalendar = new WheelCalendar(millseconds);
+            return this;
+        }
+
+        public Builder setYearText(String year){
+            mPickerConfig.mYear = year;
+            return this;
+        }
+
+        public Builder setMonthText(String month){
+            mPickerConfig.mMonth = month;
+            return this;
+        }
+
+        public Builder setDayText(String day){
+            mPickerConfig.mDay = day;
+            return this;
+        }
+
+        public Builder setHourText(String hour){
+            mPickerConfig.mHour = hour;
+            return this;
+        }
+
+        public Builder setMinuteText(String minute){
+            mPickerConfig.mMinute = minute;
             return this;
         }
 
