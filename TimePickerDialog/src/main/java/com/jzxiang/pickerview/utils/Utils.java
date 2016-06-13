@@ -20,6 +20,11 @@ public class Utils {
                 return calendar.year == params[0] &&
                         calendar.month == params[1] &&
                         calendar.day == params[2];
+            case 4:
+                return calendar.year == params[0] &&
+                        calendar.month == params[1] &&
+                        calendar.day == params[2] &&
+                        calendar.hour == params[3];
         }
         return false;
     }

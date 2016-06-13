@@ -24,7 +24,7 @@ public interface IController {
 
     int getMaxHour();
 
-    int getMinMinute();
+    int getMinMinute(int year, int month, int day, int hour);
 
     int getMaxMinute();
 

@@ -1,15 +1,16 @@
-package com.jzxiang.pickerview.view;
+package com.jzxiang.pickerview;
 
 import android.content.Context;
 import android.view.View;
-import com.jzxiang.pickerview.IController;
-import com.jzxiang.pickerview.R;
+
 import com.jzxiang.pickerview.adapters.NumericWheelAdapter;
 import com.jzxiang.pickerview.config.PickerConfig;
+import com.jzxiang.pickerview.data.source.TimeRepository;
 import com.jzxiang.pickerview.utils.PickerContants;
 import com.jzxiang.pickerview.utils.Utils;
 import com.jzxiang.pickerview.wheel.OnWheelChangedListener;
 import com.jzxiang.pickerview.wheel.WheelView;
+
 import java.util.Calendar;
 
 /**
@@ -21,9 +22,8 @@ public class TimeWheel {
     WheelView year, month, day, hour, minute;
     NumericWheelAdapter mYearAdapter, mMonthAdapter, mDayAdapter, mHourAdapter, mMinuteAdapter;
 
-    IController mIController;
     PickerConfig mPickerConfig;
-
+    TimeRepository mRepository;
     OnWheelChangedListener yearListener = new OnWheelChangedListener() {
         @Override
         public void onChanged(WheelView wheel, int oldValue, int newValue) {
@@ -42,11 +42,17 @@ public class TimeWheel {
             updateHours();
         }
     };
+    OnWheelChangedListener minuteListener = new OnWheelChangedListener() {
+        @Override
+        public void onChanged(WheelView wheel, int oldValue, int newValue) {
+            updateMinutes();
+        }
+    };
 
-
-    public TimeWheel(IController iController, View view, PickerConfig pickerConfig) {
-        mIController = iController;
+    public TimeWheel(View view, PickerConfig pickerConfig) {
         mPickerConfig = pickerConfig;
+
+        mRepository = new TimeRepository(pickerConfig);
         mContext = view.getContext();
         initialize(view);
     }
@@ -90,26 +96,30 @@ public class TimeWheel {
         year.addChangingListener(yearListener);
         year.addChangingListener(monthListener);
         year.addChangingListener(dayListener);
+        year.addChangingListener(minuteListener);
         month.addChangingListener(monthListener);
         month.addChangingListener(dayListener);
+        month.addChangingListener(minuteListener);
         day.addChangingListener(dayListener);
+        day.addChangingListener(minuteListener);
+        hour.addChangingListener(minuteListener);
     }
 
     void initYear() {
-        int minYear = mIController.getMinYear();
-        int maxYear = mIController.getMaxYear();
+        int minYear = mRepository.getMinYear();
+        int maxYear = mRepository.getMaxYear();
 
         mYearAdapter = new NumericWheelAdapter(mContext, minYear, maxYear, PickerContants.FORMAT, mPickerConfig.mYear);
         mYearAdapter.setConfig(mPickerConfig);
         year.setViewAdapter(mYearAdapter);
-        year.setCurrentItem(mIController.getDefaultCalendar().year - minYear);
+        year.setCurrentItem(mRepository.getDefaultCalendar().year - minYear);
     }
 
     void initMonth() {
         updateMonths();
         int curYear = getCurrentYear();
-        int minMonth = mIController.getMinMonth(curYear);
-        month.setCurrentItem(mIController.getDefaultCalendar().month - minMonth);
+        int minMonth = mRepository.getMinMonth(curYear);
+        month.setCurrentItem(mRepository.getDefaultCalendar().month - minMonth);
         month.setCyclic(mPickerConfig.cyclic);
     }
 
@@ -118,8 +128,8 @@ public class TimeWheel {
         int curYear = getCurrentYear();
         int curMonth = getCurrentMonth();
 
-        int minDay = mIController.getMinDay(curYear, curMonth);
-        day.setCurrentItem(mIController.getDefaultCalendar().day - minDay);
+        int minDay = mRepository.getMinDay(curYear, curMonth);
+        day.setCurrentItem(mRepository.getDefaultCalendar().day - minDay);
         day.setCyclic(mPickerConfig.cyclic);
     }
 
@@ -129,18 +139,22 @@ public class TimeWheel {
         int curMonth = getCurrentMonth();
         int curDay = getCurrentDay();
 
-        int minHour = mIController.getMinHour(curYear, curMonth, curDay);
-        hour.setCurrentItem(mIController.getDefaultCalendar().hour - minHour);
+        int minHour = mRepository.getMinHour(curYear, curMonth, curDay);
+        hour.setCurrentItem(mRepository.getDefaultCalendar().hour - minHour);
         hour.setCyclic(mPickerConfig.cyclic);
     }
 
     void initMinute() {
-        int minMinute = mIController.getMinMinute();
-        int maxMinute = mIController.getMaxMinute();
-        mMinuteAdapter = new NumericWheelAdapter(mContext, minMinute, maxMinute, PickerContants.FORMAT, mPickerConfig.mMinute);
-        mMinuteAdapter.setConfig(mPickerConfig);
+        updateMinutes();
+        int curYear = getCurrentYear();
+        int curMonth = getCurrentMonth();
+        int curDay = getCurrentDay();
+        int curHour = getCurrentHour();
+        int minMinute = mRepository.getMinMinute(curYear, curMonth, curDay, curHour);
+
+        minute.setCurrentItem(mRepository.getDefaultCalendar().minute - minMinute);
         minute.setCyclic(mPickerConfig.cyclic);
-        minute.setViewAdapter(mMinuteAdapter);
+
     }
 
     void updateMonths() {
@@ -148,13 +162,13 @@ public class TimeWheel {
             return;
 
         int curYear = getCurrentYear();
-        int minMonth = mIController.getMinMonth(curYear);
-        int maxMonth = mIController.getMaxMonth();
+        int minMonth = mRepository.getMinMonth(curYear);
+        int maxMonth = mRepository.getMaxMonth(curYear);
         mMonthAdapter = new NumericWheelAdapter(mContext, minMonth, maxMonth, PickerContants.FORMAT, mPickerConfig.mMonth);
         mMonthAdapter.setConfig(mPickerConfig);
         month.setViewAdapter(mMonthAdapter);
 
-        if (mIController.isMinYear(curYear)) {
+        if (mRepository.isMinYear(curYear)) {
             month.setCurrentItem(0, false);
         }
     }
@@ -170,13 +184,13 @@ public class TimeWheel {
         calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) + year.getCurrentItem());
         calendar.set(Calendar.MONTH, curMonth);
 
-        int maxDay = mIController.getMaxDay(curYear, curMonth);
-        int minDay = mIController.getMinDay(curYear, curMonth);
+        int maxDay = mRepository.getMaxDay(curYear, curMonth);
+        int minDay = mRepository.getMinDay(curYear, curMonth);
         mDayAdapter = new NumericWheelAdapter(mContext, minDay, maxDay, PickerContants.FORMAT, mPickerConfig.mDay);
         mDayAdapter.setConfig(mPickerConfig);
         day.setViewAdapter(mDayAdapter);
 
-        if (mIController.isMinMonth(curYear, curMonth)) {
+        if (mRepository.isMinMonth(curYear, curMonth)) {
             day.setCurrentItem(0, true);
         }
 
@@ -194,41 +208,66 @@ public class TimeWheel {
         int curMonth = getCurrentMonth();
         int curDay = getCurrentDay();
 
-        int minHour = mIController.getMinHour(curYear, curMonth, curDay);
-        int maxHour = mIController.getMaxHour();
+        int minHour = mRepository.getMinHour(curYear, curMonth, curDay);
+        int maxHour = mRepository.getMaxHour(curYear, curMonth, curDay);
 
         mHourAdapter = new NumericWheelAdapter(mContext, minHour, maxHour, PickerContants.FORMAT, mPickerConfig.mHour);
         mHourAdapter.setConfig(mPickerConfig);
         hour.setViewAdapter(mHourAdapter);
 
-        if (mIController.isMinDay(curYear, curMonth, curDay))
+        if (mRepository.isMinDay(curYear, curMonth, curDay))
             hour.setCurrentItem(0, false);
     }
 
+    void updateMinutes() {
+        if (minute.getVisibility() == View.GONE)
+            return;
+
+        int curYear = getCurrentYear();
+        int curMonth = getCurrentMonth();
+        int curDay = getCurrentDay();
+        int curHour = getCurrentHour();
+
+        int minMinute = mRepository.getMinMinute(curYear, curMonth, curDay, curHour);
+        int maxMinute = mRepository.getMaxMinute(curYear, curMonth, curDay, curHour);
+
+        mMinuteAdapter = new NumericWheelAdapter(mContext, minMinute, maxMinute, PickerContants.FORMAT, mPickerConfig.mMinute);
+        mMinuteAdapter.setConfig(mPickerConfig);
+        minute.setViewAdapter(mMinuteAdapter);
+
+        if (mRepository.isMinHour(curYear, curMonth, curDay, curHour))
+            minute.setCurrentItem(0, false);
+    }
+
     public int getCurrentYear() {
-        return year.getCurrentItem() + mIController.getMinYear();
+        return year.getCurrentItem() + mRepository.getMinYear();
     }
 
     public int getCurrentMonth() {
         int curYear = getCurrentYear();
-        return month.getCurrentItem() + +mIController.getMinMonth(curYear);
+        return month.getCurrentItem() + +mRepository.getMinMonth(curYear);
     }
 
     public int getCurrentDay() {
         int curYear = getCurrentYear();
         int curMonth = getCurrentMonth();
-        return day.getCurrentItem() + mIController.getMinDay(curYear, curMonth);
+        return day.getCurrentItem() + mRepository.getMinDay(curYear, curMonth);
     }
 
     public int getCurrentHour() {
         int curYear = getCurrentYear();
         int curMonth = getCurrentMonth();
         int curDay = getCurrentDay();
-        return hour.getCurrentItem() + mIController.getMinHour(curYear, curMonth, curDay);
+        return hour.getCurrentItem() + mRepository.getMinHour(curYear, curMonth, curDay);
     }
 
     public int getCurrentMinute() {
-        return minute.getCurrentItem() + mIController.getMinMinute();
+        int curYear = getCurrentYear();
+        int curMonth = getCurrentMonth();
+        int curDay = getCurrentDay();
+        int curHour = getCurrentHour();
+
+        return minute.getCurrentItem() + mRepository.getMinMinute(curYear, curMonth, curDay, curHour);
     }
 
 

@@ -21,6 +21,7 @@ public class WheelCalendar {
             return;
         }
         Calendar calendar = Calendar.getInstance();
+        calendar.clear();
         calendar.setTimeInMillis(millseconds);
 
         year = calendar.get(Calendar.YEAR);

@@ -10,7 +10,6 @@ import com.jzxiang.pickerview.data.Type;
 import com.jzxiang.pickerview.listener.OnDateSetListener;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, OnDateSetListener {
@@ -28,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
-
+        long tenYears = 10L * 365 * 1000 * 60 * 60 * 24L;
         mDialogAll = new TimePickerDialog.Builder()
                 .setCallBack(this)
                 .setCancelStringId("Cancel")
@@ -41,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .setMinuteText("Minute")
                 .setCyclic(false)
                 .setMinMillseconds(System.currentTimeMillis())
+                .setMaxMillseconds(System.currentTimeMillis() + tenYears)
                 .setCurrentMillseconds(System.currentTimeMillis())
                 .setThemeColor(getResources().getColor(R.color.timepicker_dialog_bg))
                 .setType(Type.ALL)

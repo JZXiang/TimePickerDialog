@@ -13,11 +13,12 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
+
 import com.jzxiang.pickerview.config.PickerConfig;
 import com.jzxiang.pickerview.data.Type;
 import com.jzxiang.pickerview.data.WheelCalendar;
 import com.jzxiang.pickerview.listener.OnDateSetListener;
-import com.jzxiang.pickerview.view.TimeWheel;
+
 import java.util.Calendar;
 
 /**
@@ -25,7 +26,6 @@ import java.util.Calendar;
  */
 public class TimePickerDialog extends DialogFragment implements View.OnClickListener {
     PickerConfig mPickerConfig;
-    IController mIController;
     private TimeWheel mTimeWheel;
     private long mCurrentMillSeconds;
 
@@ -40,6 +40,7 @@ public class TimePickerDialog extends DialogFragment implements View.OnClickList
         super.onCreate(savedInstanceState);
         Activity activity = getActivity();
         activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
     }
 
     @Override
@@ -54,7 +55,6 @@ public class TimePickerDialog extends DialogFragment implements View.OnClickList
 
     private void initialize(PickerConfig pickerConfig) {
         mPickerConfig = pickerConfig;
-        mIController = new ControllerImpl(pickerConfig);
     }
 
     @NonNull
@@ -83,7 +83,7 @@ public class TimePickerDialog extends DialogFragment implements View.OnClickList
         sure.setText(mPickerConfig.mSureString);
         toolbar.setBackgroundColor(mPickerConfig.mThemeColor);
 
-        mTimeWheel = new TimeWheel(mIController, view, mPickerConfig);
+        mTimeWheel = new TimeWheel(view, mPickerConfig);
         return view;
     }
 
@@ -119,7 +119,6 @@ public class TimePickerDialog extends DialogFragment implements View.OnClickList
     void sureClicked() {
         Calendar calendar = Calendar.getInstance();
         calendar.clear();
-        int day = mTimeWheel.getCurrentDay();
 
         calendar.set(Calendar.YEAR, mTimeWheel.getCurrentYear());
         calendar.set(Calendar.MONTH, mTimeWheel.getCurrentMonth() - 1);
@@ -193,6 +192,11 @@ public class TimePickerDialog extends DialogFragment implements View.OnClickList
 
         public Builder setMinMillseconds(long millseconds) {
             mPickerConfig.mMinCalendar = new WheelCalendar(millseconds);
+            return this;
+        }
+
+        public Builder setMaxMillseconds(long millseconds) {
+            mPickerConfig.mMaxCalendar = new WheelCalendar(millseconds);
             return this;
         }
 

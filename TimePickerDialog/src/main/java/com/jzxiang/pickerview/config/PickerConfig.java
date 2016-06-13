@@ -33,6 +33,12 @@ public class PickerConfig {
      * The min timeMillseconds
      */
     public WheelCalendar mMinCalendar = new WheelCalendar(0);
+
+    /**
+     * The max timeMillseconds
+     */
+    public WheelCalendar mMaxCalendar = new WheelCalendar(0);
+
     /**
      * The default selector timeMillseconds
      */

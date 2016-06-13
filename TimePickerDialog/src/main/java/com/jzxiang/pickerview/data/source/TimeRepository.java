@@ -1,4 +1,4 @@
-package com.jzxiang.pickerview;
+package com.jzxiang.pickerview.data.source;
 
 import com.jzxiang.pickerview.config.PickerConfig;
 import com.jzxiang.pickerview.data.WheelCalendar;
@@ -8,21 +8,26 @@ import com.jzxiang.pickerview.utils.Utils;
 import java.util.Calendar;
 
 /**
- * Created by jzxiang on 16/5/15.
+ * Created by jzxiang on 16/6/13.
  */
-public class ControllerImpl implements IController {
-
+public class TimeRepository implements TimeDataSource {
     PickerConfig mPickerConfig;
-    WheelCalendar mCalendarMin;
+    WheelCalendar mCalendarMin, mCalendarMax;
 
-    public ControllerImpl(PickerConfig pickerConfig) {
+    boolean mIsMinNoRange, mIsMaxNoRange;
+
+    public TimeRepository(PickerConfig pickerConfig) {
         mPickerConfig = pickerConfig;
         mCalendarMin = pickerConfig.mMinCalendar;
+        mCalendarMax = pickerConfig.mMaxCalendar;
+
+        mIsMinNoRange = mCalendarMin.isNoRange();
+        mIsMaxNoRange = mCalendarMax.isNoRange();
     }
 
     @Override
     public int getMinYear() {
-        if (isNoRange())
+        if (mIsMinNoRange)
             return PickerContants.DEFAULT_MIN_YEAR;
         else
             return mCalendarMin.year;
@@ -30,32 +35,41 @@ public class ControllerImpl implements IController {
 
     @Override
     public int getMaxYear() {
-        return getMinYear() + PickerContants.YEAR_COUNT;
+        if (mIsMaxNoRange)
+            return getMinYear() + PickerContants.YEAR_COUNT;
+
+        return mCalendarMax.year;
     }
 
     @Override
     public int getMinMonth(int year) {
-        if (!isNoRange() && Utils.isTimeEquals(mCalendarMin, year))
+        if (!mIsMinNoRange && Utils.isTimeEquals(mCalendarMin, year))
             return mCalendarMin.month;
-        else
-            return PickerContants.MIN_MONTH;
+
+        return PickerContants.MIN_MONTH;
     }
 
     @Override
-    public int getMaxMonth() {
+    public int getMaxMonth(int year) {
+        if (!mIsMaxNoRange && Utils.isTimeEquals(mCalendarMax, year))
+            return mCalendarMax.month;
+
         return PickerContants.MAX_MONTH;
     }
 
     @Override
     public int getMinDay(int year, int month) {
-        if (!isNoRange() && Utils.isTimeEquals(mCalendarMin, year, month))
+        if (!mIsMinNoRange && Utils.isTimeEquals(mCalendarMin, year, month))
             return mCalendarMin.day;
-        else
-            return PickerContants.MIN_DAY;
+
+        return PickerContants.MIN_DAY;
     }
 
     @Override
     public int getMaxDay(int year, int month) {
+        if (!mIsMaxNoRange && Utils.isTimeEquals(mCalendarMax, year, month))
+            return mCalendarMax.day;
+
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, year);
         calendar.set(Calendar.DATE, 1);
@@ -66,27 +80,33 @@ public class ControllerImpl implements IController {
 
     @Override
     public int getMinHour(int year, int month, int day) {
-        if (!isNoRange() && Utils.isTimeEquals(mCalendarMin, year, month, day))
+        if (!mIsMinNoRange && Utils.isTimeEquals(mCalendarMin, year, month, day))
             return mCalendarMin.hour;
         else
             return PickerContants.MIN_HOUR;
     }
 
     @Override
-    public int getMaxHour() {
+    public int getMaxHour(int year, int month, int day) {
+        if (!mIsMaxNoRange && Utils.isTimeEquals(mCalendarMax, year, month, day))
+            return mCalendarMax.hour;
+
         return PickerContants.MAX_HOUR;
     }
 
     @Override
     public int getMinMinute(int year, int month, int day, int hour) {
-        if (!isNoRange() && Utils.isTimeEquals(mCalendarMin, year, month, day, hour))
+        if (!mIsMinNoRange && Utils.isTimeEquals(mCalendarMin, year, month, day, hour))
             return mCalendarMin.minute + 1;
         else
             return PickerContants.MIN_MINUTE;
     }
 
     @Override
-    public int getMaxMinute() {
+    public int getMaxMinute(int year, int month, int day, int hour) {
+        if (!mIsMaxNoRange && Utils.isTimeEquals(mCalendarMax, year, month, day, hour))
+            return mCalendarMax.minute;
+
         return PickerContants.MAX_MINUTE;
     }
 
@@ -106,9 +126,10 @@ public class ControllerImpl implements IController {
     }
 
     @Override
-    public boolean isNoRange() {
-        return mCalendarMin.isNoRange();
+    public boolean isMinHour(int year, int month, int day, int hour) {
+        return Utils.isTimeEquals(mCalendarMin, year, month, day, hour);
     }
+
 
     @Override
     public WheelCalendar getDefaultCalendar() {
