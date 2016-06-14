@@ -1,6 +1,6 @@
 # ChangeLog
 
-### 1.0.0
+### 0.9.9
 * Add the function to set the max timeMillseconds.
 ``` java 
     setMaxMillseconds
