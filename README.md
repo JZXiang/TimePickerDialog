@@ -8,34 +8,41 @@ GitHub: https://github.com/JZXiang
 An Android time picker library.  
 Easy to use.  
 Support five types.   
-Able to set the minimun millseconds. 
+Able to set the minimun and maximum millseconds. 
 
 [ChangeLog](https://github.com/JZXiang/TimePickerDialog/blob/master/change_log.md)  
 [Download APK](https://github.com/JZXiang/PickerView/raw/master/sample-debug.apk)
 
 ## gradle, latest version:
 ```java
-   compile 'com.jzxiang.pickerview:TimePickerDialog:0.9.3'
+   compile 'com.jzxiang.pickerview:TimePickerDialog:0.9.9'
 ```
 ## Demo picture
 ![](https://github.com/JZXiang/PickerView/raw/master/preview/timepickerdialog_demo.gif)
 
 ## An example configuration
 ```java
-    mDialogAll = new TimePickerDialog.Builder()
-                    .setCallBack(this)
-                    .setCancelStringId("cancel")
-                    .setSureStringId("sure")
-                    .setTitleStringId("TimePicker")
-                    .setCyclic(false)
-                    .setMinMillseconds(System.currentTimeMillis())
-                    .setCurrentMillseconds(System.currentTimeMillis())
-                    .setThemeColor(getResources().getColor(R.color.timepicker_dialog_bg))
-                    .setType(Type.ALL)
-                    .setWheelItemTextNormalColor(getResources().getColor(R.color.timetimepicker_default_text_color))
-                    .setWheelItemTextSelectorColor(getResources().getColor(R.color.timepicker_toolbar_bg))
-                    .setWheelItemTextSize(12)
-                    .build();
+                    mDialogAll = new TimePickerDialog.Builder()
+                                    .setCallBack(this)
+                                    .setCancelStringId("Cancel")
+                                    .setSureStringId("Sure")
+                                    .setTitleStringId("TimePicker")
+                                    .setYearText("Year")
+                                    .setMonthText("Month")
+                                    .setDayText("Day")
+                                    .setHourText("Hour")
+                                    .setMinuteText("Minute")
+                                    .setCyclic(false)
+                                    .setMinMillseconds(System.currentTimeMillis())
+                                    .setMaxMillseconds(System.currentTimeMillis() + tenYears)
+                                    .setCurrentMillseconds(System.currentTimeMillis())
+                                    .setThemeColor(getResources().getColor(R.color.timepicker_dialog_bg))
+                                    .setType(Type.ALL)
+                                    .setWheelItemTextNormalColor(getResources().getColor(R.color.timetimepicker_default_text_color))
+                                    .setWheelItemTextSelectorColor(getResources().getColor(R.color.timepicker_toolbar_bg))
+                                    .setWheelItemTextSize(12)
+                                    .build();
+
 ```
 ## Thanks
 [android-wheel](https://github.com/maarek/android-wheel)

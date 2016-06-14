@@ -57,7 +57,6 @@ public class TimeWheel {
         initialize(view);
     }
 
-
     public void initialize(View view) {
         initView(view);
         initYear();
