@@ -15,7 +15,7 @@ Able to set the minimun and maximum millseconds.
 
 ## gradle, latest version:
 ```java
-   compile 'com.jzxiang.pickerview:TimePickerDialog:0.9.9'
+   compile 'com.jzxiang.pickerview:TimePickerDialog:1.0.0'
 ```
 ## Demo picture
 ![](https://github.com/JZXiang/PickerView/raw/master/preview/timepickerdialog_demo.gif)

@@ -9,5 +9,6 @@ public enum Type {
     YEAR_MONTH_DAY,
     HOURS_MINS,
     MONTH_DAY_HOUR_MIN,
-    YEAR_MONTH
+    YEAR_MONTH,
+    YEAR
 }

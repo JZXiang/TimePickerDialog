@@ -90,6 +90,9 @@ public class TimeWheel {
             case HOURS_MINS:
                 Utils.hideViews(year, month, day);
                 break;
+            case YEAR:
+                Utils.hideViews(month, day, hour, minute);
+                break;
         }
 
         year.addChangingListener(yearListener);
